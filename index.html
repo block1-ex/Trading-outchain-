@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blockchain Transaction</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      background: #f5f7fa;
+      color: #1a202c;
+      line-height: 1.6;
+    }
+
+    /* ===== NAVIGATION ===== */
+    .navbar {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 2rem;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #f7931a;
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f7931a, #e08f0f);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a202c;
+    }
+
+    .user-status {
+      font-size: 12px;
+      color: #718096;
+    }
+
+    /* ===== WELCOME SCREEN ===== */
+    .welcome-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f7931a 0%, #e08f0f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.8s ease;
+    }
+
+    .welcome-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .welcome-content {
+      text-align: center;
+      color: white;
+    }
+
+    .welcome-icon {
+      font-size: 80px;
+      margin-bottom: 2rem;
+      animation: slideDown 0.8s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .welcome-title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      animation: slideDown 0.8s ease 0.2s both;
+    }
+
+    .welcome-message {
+      font-size: 20px;
+      opacity: 0.9;
+      margin-bottom: 3rem;
+      animation: slideDown 0.8s ease 0.4s both;
+    }
+
+    .welcome-loader {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      animation: slideDown 0.8s ease 0.6s both;
+    }
+
+    .loader-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      animation: bounce 1.4s infinite;
+    }
+
+    .loader-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .loader-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loader-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    /* ===== HEADER SECTION ===== */
+    .page-header {
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: #718096;
+    }
+
+    /* ===== GRID LAYOUT ===== */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ===== CARD STYLES ===== */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e0;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a202c;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #047857;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #047857;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== BALANCE CARD ===== */
+    .balance-section {
+      grid-column: 1 / -1;
+    }
+
+    .balance-card {
+      background: linear-gradient(135deg, #f7931a 0%, #e08f0f 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(247, 147, 26, 0.2);
+      border: none;
+    }
+
+    .balance-card:hover {
+      box-shadow: 0 15px 40px rgba(247, 147, 26, 0.3);
+    }
+
+    .balance-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .balance-bank {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .balance-amount {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .balance-currency {
+      font-size: 20px;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .balance-change {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-top: 12px;
+    }
+
+    /* ===== INFO ROWS ===== */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem;
+      background: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-row:hover {
+      background: #f0f4f8;
+      border-color: #cbd5e0;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: #718096;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .info-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f7931a, #e08f0f);
+      color: white;
+      box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3);
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(247, 147, 26, 0.4);
+      background: linear-gradient(135deg, #e08f0f, #c97d0a);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #f7931a;
+      border: 2px solid #f7931a;
+      flex: 1;
+    }
+
+    .btn-secondary:hover {
+      background: #fff8f0;
+    }
+
+    .btn-copy {
+      background: white;
+      color: #f7931a;
+      border: 2px solid #f7931a;
+      padding: 8px 16px;
+      font-size: 12px;
+      width: auto;
+      margin-top: 8px;
+    }
+
+    .btn-copy:hover {
+      background: #fff8f0;
+    }
+
+    /* ===== STATS SECTION ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: #f7931a;
+      box-shadow: 0 4px 12px rgba(247, 147, 26, 0.1);
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* ===== DROP DOWN NOTIFICATION ===== */
+    .notification-dropdown {
+      position: fixed;
+      top: 70px;
+      right: 2rem;
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-left: 4px solid #f97316;
+      max-width: 400px;
+      z-index: 1500;
+      transform: translateY(-400px);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    .notification-dropdown.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .notification-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .notification-title {
+      font-weight: 700;
+      color: #7c2d12;
+      font-size: 16px;
+    }
+
+    .notification-message {
+      font-size: 14px;
+      color: #92400e;
+      line-height: 1.6;
+    }
+
+    .notification-amount {
+      background: #fef3c7;
+      border-left: 3px solid #f97316;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+      font-weight: 700;
+      color: #7c2d12;
+    }
+
+    /* ===== MODAL/DIALOG ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 3rem;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+      position: relative;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .modal-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
+    }
+
+    .modal-subtitle {
+      font-size: 14px;
+      color: #718096;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #e2e8f0;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4a5568;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: #cbd5e0;
+      color: #1a202c;
+    }
+
+    /* ===== WALLET DETAILS ===== */
+    .wallet-card {
+      background: linear-gradient(135deg, #f0fdf4, #f0fdf4);
+      border: 1px solid #a7f3d0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .wallet-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid #d1fae5;
+    }
+
+    .wallet-row:last-child {
+      border-bottom: none;
+    }
+
+    .wallet-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #047857;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .wallet-value {
+      font-size: 14px;
+      color: #065f46;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      text-align: right;
+      flex: 1;
+      margin-left: 1rem;
+    }
+
+    .wallet-address-display {
+      background: #f0fdf4;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #065f46;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    /* ===== LOADING SPINNER ===== */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(247, 147, 26, 0.3);
+      border-radius: 50%;
+      border-top-color: #f7931a;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0 1rem;
+      }
+
+      .navbar-right {
+        gap: 1rem;
+      }
+
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+
+      .dashboard-grid {
+        gap: 1rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .modal-content {
+        padding: 1.5rem;
+        max-width: calc(100% - 2rem);
+      }
+
+      .balance-amount {
+        font-size: 36px;
+      }
+
+      .stats-grid {
+        gap: 1rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .welcome-title {
+        font-size: 36px;
+      }
+
+      .welcome-message {
+        font-size: 16px;
+      }
+
+      .notification-dropdown {
+        right: 1rem;
+        max-width: calc(100% - 2rem);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== WELCOME SCREEN ===== -->
+  <div class="welcome-screen" id="welcomeScreen">
+    <div class="welcome-content">
+      <div class="welcome-icon">₿</div>
+      <h1 class="welcome-title">Welcome Back</h1>
+      <p class="welcome-message">Stan Ottembrajt</p>
+      <div class="welcome-loader">
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <a href="#" class="navbar-brand">₿ Blockchain Wallet</a>
+
+    <div class="navbar-right">
+      <div class="user-profile">
+        <div class="user-avatar">SO</div>
+        <div class="user-info">
+          <div class="user-name">Stan Ottembrajt</div>
+          <div class="user-status">Bitcoin Wallet</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== DROP DOWN NOTIFICATION ===== -->
+  <div class="notification-dropdown" id="notificationDropdown">
+    <div class="notification-header">
+      <div class="notification-icon">🔑</div>
+      <div class="notification-title">Session ID Requirement</div>
+    </div>
+    <div class="notification-message">
+      A Session ID is required for this transaction. Please complete the wallet confirmation to proceed.
+    </div>
+    <div class="notification-amount">
+      Transaction Fee: $850
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Transaction Confirmation</h1>
+      <p class="page-subtitle">Confirm your blockchain wallet address</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">₿</div>
+        <div class="stat-value">1</div>
+        <div class="stat-label">Active Wallet</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✓</div>
+        <div class="stat-value">Verified</div>
+        <div class="stat-label">Wallet Status</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🟢</div>
+        <div class="stat-value">Active</div>
+        <div class="stat-label">Network Status</div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Balance Card (Full Width) -->
+      <div class="card balance-section">
+        <div class="balance-card">
+          <div class="balance-label">Transaction Status</div>
+          <div class="balance-bank">Bitcoin Network</div>
+          <div>
+            <span class="balance-amount">Pending</span><span class="balance-currency">Confirmation</span>
+          </div>
+          <div class="balance-change">↳ Awaiting wallet verification</div>
+        </div>
+      </div>
+
+      <!-- Wallet Address Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Wallet Address</h3>
+          <span class="status-badge">
+            <span class="status-dot"></span>
+            Active
+          </span>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Network</div>
+            <div class="info-value">Bitcoin (BTC)</div>
+          </div>
+          <div style="text-align: right;">🔗</div>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Wallet Type</div>
+            <div class="info-value">Exodus Wallet</div>
+          </div>
+          <div style="text-align: right;">🔐</div>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Address Status</div>
+            <div class="info-value">Ready</div>
+          </div>
+          <div style="text-align: right;">📍</div>
+        </div>
+      </div>
+
+      <!-- Transaction Details Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Transaction Details</h3>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Transaction Fee</div>
+            <div class="info-value">$850.00</div>
+          </div>
+          <div style="text-align: right;">💰</div>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Processing Time</div>
+            <div class="info-value">10-30 minutes</div>
+          </div>
+          <div style="text-align: right;">⏱️</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" id="withdrawBtn">🔘 Confirm Wallet Address</button>
+        </div>
+      </div>
+
+      <!-- Security Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Security</h3>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Encryption</div>
+            <div class="info-value">AES-256</div>
+          </div>
+          <div style="text-align: right; color: #047857;">🔒</div>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Last Verified</div>
+            <div class="info-value">Today, 2:34 PM</div>
+          </div>
+          <div style="text-align: right;">🕐</div>
+        </div>
+
+        <div class="info-row">
+          <div>
+            <div class="info-label">Connection Status</div>
+            <div class="info-value">Secure</div>
+          </div>
+          <div style="text-align: right;">✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WALLET CONFIRMATION MODAL ===== -->
+  <div class="modal-overlay" id="beneficiaryModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeBeneficiary">×</button>
+
+      <div class="modal-header">
+        <h2 class="modal-title">Confirm Wallet Address</h2>
+        <p class="modal-subtitle">Please verify your Bitcoin receiving address before proceeding</p>
+      </div>
+
+      <div class="wallet-card">
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Wallet Address</div>
+          </div>
+        </div>
+        <div class="wallet-address-display">
+          bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
+        </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Network</div>
+            <div class="wallet-value">Bitcoin Mainnet</div>
+          </div>
+          <div style="text-align: right;">🔗</div>
+        </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Address Type</div>
+            <div class="wallet-value">SegWit</div>
+          </div>
+          <div style="text-align: right;">🏷️</div>
+        </div>
+      </div>
+
+      <button class="btn btn-copy" id="copyAddressBtn">📋 Copy Now</button>
+
+      <div style="background: #f0fdf4; border: 1px solid #a7f3d0; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; margin-top: 1.5rem; font-size: 13px; color: #047857; line-height: 1.6;">
+        <strong style="color: #065f46;">⚠️ Important:</strong><br>
+        Please verify this is your correct Bitcoin wallet address. Once confirmed, this address will be used for the transaction. Store it securely.
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <button class="btn btn-secondary" id="cancelBeneficiary">Cancel</button>
+        <button class="btn btn-primary" id="confirmBeneficiary">Confirm & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const beneficiaryModal = document.getElementById('beneficiaryModal');
+    const closeBeneficiary = document.getElementById('closeBeneficiary');
+    const cancelBeneficiary = document.getElementById('cancelBeneficiary');
+    const confirmBeneficiary = document.getElementById('confirmBeneficiary');
+    const copyAddressBtn = document.getElementById('copyAddressBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+
+    const walletAddress = 'bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf';
+
+    // Show Welcome Screen on Load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        welcomeScreen.classList.add('fade-out');
+      }, 3000);
+    });
+
+    // Copy Address to Clipboard
+    copyAddressBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(walletAddress).then(() => {
+        const originalText = copyAddressBtn.textContent;
+        copyAddressBtn.textContent = '✓ Copied!';
+        setTimeout(() => {
+          copyAddressBtn.textContent = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert('Failed to copy address');
+      });
+    });
+
+    // Open Wallet Confirmation Modal
+    withdrawBtn.addEventListener('click', () => {
+      beneficiaryModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Close Wallet Confirmation Modal
+    const closeBeneficiaryModal = () => {
+      beneficiaryModal.classList.remove('show');
+      document.body.style.overflow = 'auto';
+    };
+
+    closeBeneficiary.addEventListener('click', closeBeneficiaryModal);
+    cancelBeneficiary.addEventListener('click', closeBeneficiaryModal);
+
+    // Close modal when clicking outside
+    beneficiaryModal.addEventListener('click', (e) => {
+      if (e.target === beneficiaryModal) {
+        closeBeneficiaryModal();
+      }
+    });
+
+    // Confirm Wallet
+    confirmBeneficiary.addEventListener('click', () => {
+      // Add loading state
+      confirmBeneficiary.disabled = true;
+      confirmBeneficiary.classList.add('btn-loading');
+      confirmBeneficiary.textContent = '';
+
+      // Simulate loading for 2 seconds
+      setTimeout(() => {
+        closeBeneficiaryModal();
+        
+        // Show notification dropdown with smooth animation
+        notificationDropdown.classList.add('show');
+
+        // Auto-hide after 6 seconds
+        setTimeout(() => {
+          notificationDropdown.classList.remove('show');
+        }, 6000);
+
+        // Reset button
+        confirmBeneficiary.disabled = false;
+        confirmBeneficiary.classList.remove('btn-loading');
+        confirmBeneficiary.textContent = 'Confirm & Continue';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
