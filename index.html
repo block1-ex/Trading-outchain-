@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CA$ Confirmation</title>
+  <title>Exodus CA$</title>
   <style>
     * {
       margin: 0;
@@ -37,7 +37,7 @@
       align-items: center;
       justify-content: center;
       z-index: 4000;
-      transition: opacity 0.8s ease;
+      transition: opacity 1.2s ease;
       opacity: 1;
     }
 
@@ -54,7 +54,7 @@
     .welcome-icon {
       font-size: 82px;
       margin-bottom: 1.5rem;
-      animation: slideDown 0.8s ease;
+      animation: slideDown 1s ease;
     }
 
     .welcome-title {
@@ -62,21 +62,21 @@
       font-weight: 700;
       letter-spacing: -1px;
       margin-bottom: 10px;
-      animation: slideDown 0.8s ease 0.2s both;
+      animation: slideDown 1s ease 0.3s both;
     }
 
     .welcome-message {
       font-size: 22px;
       color: #cbd5e0;
       margin-bottom: 2rem;
-      animation: slideDown 0.8s ease 0.4s both;
+      animation: slideDown 1s ease 0.6s both;
     }
 
     .welcome-loader {
       display: flex;
       justify-content: center;
       gap: 10px;
-      animation: slideDown 0.8s ease 0.6s both;
+      animation: slideDown 1s ease 0.9s both;
     }
 
     .loader-dot {
@@ -84,12 +84,12 @@
       height: 12px;
       border-radius: 50%;
       background: #f7931a;
-      animation: bounce 1.4s infinite;
+      animation: bounceSmooth 2s infinite;
     }
 
     .loader-dot:nth-child(1) { animation-delay: 0s; }
-    .loader-dot:nth-child(2) { animation-delay: 0.2s; }
-    .loader-dot:nth-child(3) { animation-delay: 0.4s; }
+    .loader-dot:nth-child(2) { animation-delay: 0.3s; }
+    .loader-dot:nth-child(3) { animation-delay: 0.6s; }
 
     @keyframes slideDown {
       from {
@@ -102,7 +102,7 @@
       }
     }
 
-    @keyframes bounce {
+    @keyframes bounceSmooth {
       0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
       40% { transform: scale(1); opacity: 1; }
     }
@@ -212,7 +212,7 @@
       padding: 3rem 2rem;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.22);
       margin-bottom: 2rem;
-      animation: fadeUp 0.6s ease;
+      animation: fadeUpSlow 1s ease;
       position: relative;
       overflow: hidden;
     }
@@ -227,10 +227,10 @@
       background: linear-gradient(90deg, transparent, rgba(247, 147, 26, 0.5), transparent);
     }
 
-    @keyframes fadeUp {
+    @keyframes fadeUpSlow {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
       }
       to {
         opacity: 1;
@@ -298,6 +298,49 @@
       font-weight: 600;
     }
 
+    /* ===== STATUS BADGE ===== */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #d8b4fe;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 12px;
+      justify-content: center;
+      animation: fadeInDown 1s ease;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #a855f7;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* ===== INFO GRID ===== */
     .details-grid {
       display: grid;
@@ -312,6 +355,7 @@
       border-radius: 14px;
       padding: 1.2rem 1.25rem;
       transition: all 0.3s ease;
+      animation: fadeUpSlow 1.2s ease;
     }
 
     .info-box:hover {
@@ -344,6 +388,7 @@
       padding: 1.2rem 1.25rem;
       margin-bottom: 1.5rem;
       transition: all 0.3s ease;
+      animation: fadeUpSlow 1.3s ease;
     }
 
     .wallet-block:hover {
@@ -370,6 +415,7 @@
       gap: 1rem;
       flex-wrap: wrap;
       margin-top: 2rem;
+      animation: fadeUpSlow 1.4s ease;
     }
 
     .btn {
@@ -383,7 +429,7 @@
       cursor: pointer;
       font-size: 15px;
       font-weight: 700;
-      transition: all 0.25s ease;
+      transition: all 0.4s ease;
       text-decoration: none;
     }
 
@@ -405,7 +451,7 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.6s ease;
+      transition: left 1s ease;
     }
 
     .btn-primary:hover::before {
@@ -427,7 +473,7 @@
       border: 2px solid #f7931a;
       padding: 12px 20px;
       min-width: 180px;
-      transition: all 0.25s ease;
+      transition: all 0.4s ease;
     }
 
     .btn-support:hover {
@@ -443,17 +489,17 @@
     .btn-loading::after {
       content: '';
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       top: 50%;
       left: 50%;
-      margin-left: -8px;
-      margin-top: -8px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      margin-left: -9px;
+      margin-top: -9px;
+      border: 2.5px solid rgba(255, 255, 255, 0.25);
       border-radius: 50%;
       border-top-color: white;
       border-right-color: white;
-      animation: spinSmooth 0.8s linear infinite;
+      animation: spinSmooth 1.2s linear infinite;
     }
 
     @keyframes spinSmooth {
@@ -471,7 +517,7 @@
       padding: 1.5rem;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
       z-index: 2000;
       backdrop-filter: blur(5px);
     }
@@ -489,14 +535,14 @@
       padding: 2rem 1.5rem 1.5rem;
       position: relative;
       box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
-      animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: modalInSlow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
       max-height: 90vh;
       overflow-y: auto;
     }
 
-    @keyframes modalIn {
+    @keyframes modalInSlow {
       from {
-        transform: translateY(40px);
+        transform: translateY(60px);
         opacity: 0;
       }
       to {
@@ -517,7 +563,7 @@
       color: #e2e8f0;
       font-size: 22px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .modal-close:hover {
@@ -626,8 +672,8 @@
       padding: 1.2rem;
       z-index: 3000;
       opacity: 0;
-      transform: translateY(-420px);
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: translateY(-480px);
+      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
       pointer-events: none;
     }
 
@@ -660,6 +706,26 @@
       font-size: 16px;
     }
 
+    .notification-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .notification-close-btn:hover {
+      background: rgba(247, 147, 26, 0.2);
+      color: #f7931a;
+    }
+
     .notification-message {
       color: #cbd5e0;
       font-size: 14px;
@@ -669,20 +735,20 @@
 
     .notification-certificate {
       width: 100%;
-      height: 200px;
+      height: 220px;
       object-fit: cover;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       display: block;
       margin-bottom: 12px;
       background: #0b1120;
-      animation: imageSlideIn 0.6s ease;
+      animation: imageSlideIn 0.8s ease;
     }
 
     @keyframes imageSlideIn {
       from {
         opacity: 0;
-        transform: scale(0.95);
+        transform: scale(0.9);
       }
       to {
         opacity: 1;
@@ -713,8 +779,8 @@
       line-height: 1.5;
     }
 
-    /* ===== CONFIRMATION PAGE ===== */
-    .confirmation-page {
+    /* ===== PENDING PAGE ===== */
+    .pending-page {
       position: fixed;
       inset: 0;
       background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
@@ -724,78 +790,85 @@
       flex-direction: column;
       z-index: 5000;
       text-align: center;
-      gap: 1.5rem;
+      gap: 1.8rem;
       padding: 2rem;
       opacity: 0;
-      transition: opacity 0.6s ease;
+      transition: opacity 0.8s ease;
       overflow-y: auto;
     }
 
-    .confirmation-page.show {
+    .pending-page.show {
       display: flex;
       opacity: 1;
     }
 
-    .confirmation-check {
-      width: 90px;
-      height: 90px;
+    .pending-spinner {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: linear-gradient(135deg, #f7931a, #e08f0f);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
-      font-weight: 900;
+      font-size: 44px;
       color: white;
-      animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      box-shadow: 0 20px 50px rgba(247, 147, 26, 0.35);
+      animation: spinCircle 2s linear infinite;
+      box-shadow: 0 25px 60px rgba(247, 147, 26, 0.3);
       flex-shrink: 0;
+      position: relative;
     }
 
-    @keyframes popIn {
-      0% {
-        transform: scale(0);
-        opacity: 0;
-      }
-      60% {
-        transform: scale(1.15);
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+    .pending-spinner::before {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 2px solid rgba(247, 147, 26, 0.2);
+      animation: spinOuter 3s linear infinite reverse;
     }
 
-    .confirmation-title {
+    @keyframes spinCircle {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes spinOuter {
+      to { transform: rotate(360deg); }
+    }
+
+    .pending-title {
       font-size: 36px;
       font-weight: 800;
       letter-spacing: -1px;
       color: #f8fafc;
-      animation: fadeInUp 0.6s ease 0.2s both;
+      animation: fadeInUpSlow 0.8s ease 0.2s both;
     }
 
-    .confirmation-message {
-      color: #cbd5e0;
+    .pending-status {
+      color: #a855f7;
       font-size: 16px;
-      animation: fadeInUp 0.6s ease 0.3s both;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      animation: fadeInUpSlow 0.8s ease 0.3s both;
     }
 
-    .confirmation-amount {
+    .pending-amount {
       color: #f7931a;
       font-size: 56px;
       font-weight: 800;
       letter-spacing: -1.5px;
-      animation: fadeInUp 0.6s ease 0.4s both;
+      animation: fadeInUpSlow 0.8s ease 0.4s both;
     }
 
-    .confirmation-btc {
+    .pending-btc {
       color: #cbd5e0;
       font-size: 18px;
       font-weight: 600;
-      animation: fadeInUp 0.6s ease 0.5s both;
+      animation: fadeInUpSlow 0.8s ease 0.5s both;
     }
 
-    .confirmation-details {
+    .pending-details {
       max-width: 520px;
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid rgba(247, 147, 26, 0.15);
@@ -804,25 +877,24 @@
       color: #cbd5e0;
       font-size: 14px;
       line-height: 1.8;
-      animation: fadeInUp 0.6s ease 0.6s both;
+      animation: fadeInUpSlow 0.8s ease 0.6s both;
     }
 
-    .confirmation-certificate {
+    .pending-certificate {
       width: min(420px, 100%);
-      height: 220px;
+      height: 240px;
       object-fit: cover;
       border-radius: 14px;
       border: 1px solid rgba(247, 147, 26, 0.2);
-      margin-top: 0.5rem;
       flex-shrink: 0;
-      animation: fadeInUp 0.6s ease 0.7s both;
+      animation: fadeInUpSlow 0.8s ease 0.7s both;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
     }
 
-    @keyframes fadeInUp {
+    @keyframes fadeInUpSlow {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -862,12 +934,23 @@
         font-size: 28px;
       }
 
-      .confirmation-amount {
+      .pending-amount {
         font-size: 44px;
       }
 
       .navbar-left {
         gap: 12px;
+      }
+
+      .pending-spinner {
+        width: 90px;
+        height: 90px;
+        font-size: 40px;
+      }
+
+      .pending-spinner::before {
+        width: 110px;
+        height: 110px;
       }
     }
   </style>
@@ -904,6 +987,8 @@
 
   <!-- Notification dropdown -->
   <div class="notification-dropdown" id="notificationDropdown">
+    <button class="notification-close-btn" id="closeNotification">×</button>
+    
     <div class="notification-header">
       <div class="notification-icon">🔑</div>
       <div class="notification-title">Session ID Required</div>
@@ -1042,14 +1127,14 @@
     </div>
   </div>
 
-  <!-- Final confirmation screen -->
-  <div class="confirmation-page" id="confirmationPage">
-    <div class="confirmation-check">✓</div>
-    <div class="confirmation-title">Transaction Confirmed</div>
-    <div class="confirmation-message">Your transaction is being processed</div>
-    <div class="confirmation-amount">$400,000</div>
-    <div class="confirmation-btc">4.82 BTC to Stan Ottembrajt</div>
-    <div class="confirmation-details">
+  <!-- Pending page -->
+  <div class="pending-page" id="pendingPage">
+    <div class="pending-spinner">⏳</div>
+    <div class="pending-title">Processing Transaction</div>
+    <div class="pending-status">Pending Credit</div>
+    <div class="pending-amount">$400,000</div>
+    <div class="pending-btc">4.82 BTC to Stan Ottembrajt</div>
+    <div class="pending-details">
       <div>Session ID: #TXN-2024-847392</div>
       <div>Bitcoin Mainnet</div>
       <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
@@ -1057,9 +1142,9 @@
       </div>
     </div>
     <img
-      class="confirmation-certificate"
-      src="transaction-certificate.png"
-      alt="Confirmation Certificate"
+      class="pending-certificate"
+      src="IMG_0038.jpeg"
+      alt="Pending Certificate"
     />
   </div>
 
@@ -1071,13 +1156,14 @@
     const cancelBtn = document.getElementById('cancelBtn');
     const confirmWalletBtn = document.getElementById('confirmWalletBtn');
     const notificationDropdown = document.getElementById('notificationDropdown');
+    const closeNotification = document.getElementById('closeNotification');
     const mainContent = document.getElementById('mainContent');
-    const confirmationPage = document.getElementById('confirmationPage');
+    const pendingPage = document.getElementById('pendingPage');
 
     window.addEventListener('load', () => {
       setTimeout(() => {
         welcomeScreen.classList.add('fade-out');
-      }, 2500);
+      }, 3500);
     });
 
     confirmBtn.addEventListener('click', () => {
@@ -1097,6 +1183,10 @@
       if (e.target === walletModal) closeWalletModal();
     });
 
+    closeNotification.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+    });
+
     confirmWalletBtn.addEventListener('click', () => {
       confirmWalletBtn.disabled = true;
       confirmWalletBtn.classList.add('btn-loading');
@@ -1108,21 +1198,17 @@
         notificationDropdown.classList.add('show');
 
         setTimeout(() => {
-          notificationDropdown.classList.remove('show');
-        }, 6000);
-
-        setTimeout(() => {
           mainContent.style.opacity = '0';
           mainContent.style.pointerEvents = 'none';
           setTimeout(() => {
-            confirmationPage.classList.add('show');
-          }, 300);
-        }, 1000);
+            pendingPage.classList.add('show');
+          }, 400);
+        }, 1500);
 
         confirmWalletBtn.disabled = false;
         confirmWalletBtn.classList.remove('btn-loading');
         confirmWalletBtn.textContent = 'Confirm & Proceed';
-      }, 1800);
+      }, 2200);
     });
   </script>
 </body>
