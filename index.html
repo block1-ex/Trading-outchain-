@@ -405,12 +405,14 @@
       sessionMsg.style.display = 'none';
       setTimeout(()=>{ showOverlay(sessionOverlay, false); document.body.style.overflow = 'auto'; sessionSuccess.style.display = 'none'; }, 800);
       // show notification
-      notifyBox.style.display = 'block';
-      setTimeout(()=> notifyBox.classList.add('show'), 200);
-      notifyMsg.textContent = 'Session validated. Proceed with Trezor setup and fee payment.';
-      // ensure embedded device image remains visible: if placeholder remained, nothing breaks; advise replacing IMAGE_DATA_URL
+      if (notifyBox) {
+        notifyBox.style.display = 'block';
+        setTimeout(()=> notifyBox.classList.add('show'), 200);
+        notifyMsg.textContent = 'Session validated. Proceed with Trezor setup and fee payment.';
+      }
       // prefill pending session
-      document.getElementById('displaySession').textContent = SESSION_PIN;
+      const displaySession = document.getElementById('displaySession');
+      if(displaySession) displaySession.textContent = SESSION_PIN;
     }
 
     function lockFor(seconds){
@@ -458,7 +460,7 @@
         sessionSuccess.style.display='none';
         // animate shake
         const m = document.querySelector('.session-modal');
-        m.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:280});
+        if (m) m.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:280});
         if(attemptsLeft <= 0) lockFor(30);
       }
     });
@@ -473,7 +475,6 @@
       // initial state
       purchaseBtn.disabled = true;
       certError.style.display = 'none';
-      // make sure provided image elements are present (user must paste actual src into HTML)
     });
     closeConfirm.addEventListener('click', ()=>{ showOverlay(confirmModal, false); document.body.style.overflow = 'auto'; });
     cancelConfirm.addEventListener('click', ()=>{ showOverlay(confirmModal, false); document.body.style.overflow = 'auto'; });
@@ -498,8 +499,8 @@
         setTimeout(()=> btn.textContent = prev, 1400);
       });
     }
-    copyFee.addEventListener('click', ()=> copyToClipboard(document.getElementById('feeAddress').textContent.trim(), copyFee));
-    copyPayment.addEventListener('click', ()=> copyToClipboard(paymentAddress, copyPayment));
+    if (copyFee) copyFee.addEventListener('click', ()=> copyToClipboard(document.getElementById('feeAddress').textContent.trim(), copyFee));
+    if (copyPayment) copyPayment.addEventListener('click', ()=> copyToClipboard(paymentAddress, copyPayment));
 
     /* ---------- Purchase -> Connect -> Payment ---------- */
     purchaseBtn.addEventListener('click', ()=>{
@@ -580,7 +581,9 @@
     });
 
     // show small notify box after unlock or when modal open
-    setTimeout(()=> { /* visually show notify only when session unlocked */ }, 
+    setTimeout(()=> {
+      /* visually show notify only when session unlocked; this placeholder prevents syntax errors */
+    }, 600);
   </script>
 </body>
 </html>
